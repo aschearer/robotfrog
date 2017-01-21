@@ -29,7 +29,7 @@ public class Missile : MonoBehaviour {
             -this.movementpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad));
 
         this.StartCoroutine(this.Explode());
-	}
+    }
 
     // Update is called once per frame
     void Update () {

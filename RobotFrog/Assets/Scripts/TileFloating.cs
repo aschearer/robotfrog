@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 public enum HeightLevel
 {
-	Peak,
-	Neutral,
-	Valley,
+    Peak,
+    Neutral,
+    Valley,
 }
 
 public enum UpDown
 {
-	Still,
-	MovingUp,
-	MovingDown,
+    Still,
+    MovingUp,
+    MovingDown,
 }
 
 public class TileFloating : Tile {
@@ -30,34 +30,34 @@ public class TileFloating : Tile {
 
     protected float Amplitude = 0.75f;
 
-	void Start ()
-	{
+    void Start ()
+    {
         Timer = new ManualTimer();
         Timer.SetTime(0.1f);
         if(UpDownCount == -1)
         {
             UpDownState = UpDown.MovingUp;
         }
-	}
-	
-	void Update () 
-	{
+    }
+    
+    void Update () 
+    {
         float DeltaTime = Time.deltaTime;
         if(IsMoving() && Timer.Tick(DeltaTime))
         {
-        	if(UpDownState == UpDown.MovingUp)
-        	{
-        		MoveUp();
-        	}
-        	if(UpDownState == UpDown.MovingDown)
-        	{
-        		MoveDown();
-        	}
+            if(UpDownState == UpDown.MovingUp)
+            {
+                MoveUp();
+            }
+            if(UpDownState == UpDown.MovingDown)
+            {
+                MoveDown();
+            }
             HandleHeightChange();
-	    	if(Height == 0 && UpDownCount != -1)
-    		{
-    			UpDownCount--;
-    		}
+            if(Height == 0 && UpDownCount != -1)
+            {
+                UpDownCount--;
+            }
         }
     }
     bool IsMoving()
@@ -70,11 +70,11 @@ public class TileFloating : Tile {
     {
         Height++;
 
-    	// reflect
-    	if(Height >= Steps)
-    	{
-			UpDownState = UpDown.MovingDown;
-    	}
+        // reflect
+        if(Height >= Steps)
+        {
+            UpDownState = UpDown.MovingDown;
+        }
     }
 
     void MoveDown()
@@ -95,9 +95,14 @@ public class TileFloating : Tile {
     }
 
 
-    protected override void HandlePlayerAdd(Player InPlayer)
+    protected override void OnPlayerTouchingAdd(Player InPlayer)
     {
         InPlayer.HandleSurfaceChange(Height < 0);
+    }
+
+    protected override void OnPlayerTouchingRemove(Player InPlayer)
+    {
+        InPlayer.HandleSurfaceRemove();
     }
 
     protected void HandleHeightChange()

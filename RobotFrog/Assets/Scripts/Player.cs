@@ -20,6 +20,17 @@ public class Player : MonoBehaviour {
 
     private string fireAxisName;
 
+    [SerializeField]
+    private GameObject flyingModel;
+
+    [SerializeField]
+    private GameObject sittingModel;
+
+    [SerializeField]
+    private bool isFlying = false;
+
+    private bool wasFlying;
+
     internal Heading Heading { get; private set; }
 
     [SerializeField]
@@ -30,8 +41,8 @@ public class Player : MonoBehaviour {
         this.verticalAxisName = "Vertical-" + this.playerId;
         this.fireAxisName = "Fire1-" + this.playerId;
     }
-	
-	void Update () {
+    
+    void Update () {
         float horizontal = Input.GetAxis(this.horizontalAxisName);
         float vertical = Input.GetAxis(this.verticalAxisName);
 
@@ -78,22 +89,35 @@ public class Player : MonoBehaviour {
             var missileView = missile.GetComponent<Missile>();
             missileView.Owner = this;
         }
+
+        if(isFlying != wasFlying)
+        {
+            wasFlying = isFlying;
+            flyingModel.SetActive(isFlying);
+            sittingModel.SetActive(!isFlying);
+        }
     }
 
     public void HandleSurfaceChange(bool bIsBelowWater)
     {
-    	if(bIsBelowWater)
-    	{
-    		// die
-    		this.transform.localScale = 0.1f*Vector3.one;
+        isFlying = false;
+        if(bIsBelowWater)
+        {
+            // die
+            this.transform.localScale = 0.1f*Vector3.one;
 
-        	this.StartCoroutine(this.Respawn());
-    	}
+            this.StartCoroutine(this.Respawn());
+        }
+    }
+
+    public void HandleSurfaceRemove()
+    {
+        isFlying = true;
     }
 
     private IEnumerator Respawn()
     {
-    	yield return new WaitForSeconds(3.0f);
-    	this.transform.localScale = Vector3.one;
+        yield return new WaitForSeconds(3.0f);
+        this.transform.localScale = Vector3.one;
     }
 }
