@@ -23,6 +23,8 @@ public class Player : MonoBehaviour {
 
     private string fireAxisName;
 
+    private float fireTimer;
+
     [SerializeField]
     private GameObject flyingModel;
 
@@ -72,7 +74,11 @@ public class Player : MonoBehaviour {
 
     private void FireWeapon()
     {
-        if (Input.GetButtonDown(this.fireAxisName))
+        if (Input.GetButton(this.fireAxisName))
+        {
+            this.fireTimer += Time.deltaTime * 2f;
+        }
+        else if (this.fireTimer > 0)
         {
             var missile = GameObject.Instantiate(this.MissilePrefab.gameObject);
             missile.transform.SetParent(this.transform.parent);
@@ -80,6 +86,9 @@ public class Player : MonoBehaviour {
             var missileView = missile.GetComponent<Missile>();
             missileView.Owner = this;
             missileView.Level = this.Level;
+            missileView.MovementSpeed = Mathf.Clamp((int)this.fireTimer, 1, 5);
+            this.fireTimer = 0;
+
         }
     }
 

@@ -11,7 +11,7 @@ public class Missile : MonoBehaviour
     public Level Level { get; internal set; }
 
     [SerializeField]
-    private int movementSpeed;
+    public int MovementSpeed;
 
     [SerializeField]
     private float lifespan;
@@ -29,9 +29,9 @@ public class Missile : MonoBehaviour
     {
         var heading = this.Owner.Heading.ToEulerAngles();
         this.movementSpeedInternal = new Vector3(
-            (int)(this.movementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
+            (int)(this.MovementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
             0,
-            (int)(this.movementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
+            (int)(this.MovementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
 
         this.StartCoroutine(this.Explode());
     }
