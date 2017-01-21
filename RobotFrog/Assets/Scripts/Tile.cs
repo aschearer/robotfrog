@@ -55,11 +55,11 @@ public class Tile : MonoBehaviour {
 
     protected virtual void OnPlayerTouchingAdd(Player InPlayer)
     {
-
+    	InPlayer.HandleSurfaceChange(true);
     }
 
     protected virtual void OnPlayerTouchingRemove(Player InPlayer)
     {
-
+    	InPlayer.HandleSurfaceRemove();
     }
 }
