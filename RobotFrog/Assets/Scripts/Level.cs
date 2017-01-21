@@ -133,7 +133,7 @@ public class Level : MonoBehaviour {
 
         this.transform.localPosition = position;
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.5f);
 
         var twirl = Camera.main.GetComponent<Twirl>();
         twirl.angle = 0;
