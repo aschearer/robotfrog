@@ -17,6 +17,11 @@ public enum UpDown
 }
 
 public class TileFloating : Tile {
+
+    public GameObject Platform;
+
+    public bool CanFlip;
+    public bool IsFlipped;
     
     [SerializeField]
     private int Height;
@@ -86,6 +91,12 @@ public class TileFloating : Tile {
         if(Height <= -Steps)
         {
             UpDownState = UpDown.MovingUp;
+            if(CanFlip)
+            {
+                IsFlipped = !IsFlipped;
+                Platform.transform.localRotation =  Quaternion.Euler(IsFlipped ? 180f: 0f, 0f, 0f);
+                Platform.transform.localPosition = Vector3.up * (IsFlipped ? 0.95f : 0.01f);
+            }
         }
     }
 
@@ -117,6 +128,8 @@ public class TileFloating : Tile {
         Vector3 TilePosition = this.transform.position;
         TilePosition.y = (float)Height/Steps*Amplitude;
         this.transform.position = TilePosition;
+        Platform.SetActive(Height >= 0);
+
         foreach(Player player in TouchingPlayers)
         {
             player.HandleSurfaceChange(Height < 0);
