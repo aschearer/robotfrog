@@ -5,34 +5,23 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
+    public int BlastRadius = 1;
 
     public Player Owner { get; internal set; }
 
     public Level Level { get; internal set; }
 
-    [SerializeField]
-    public int MovementSpeed;
+    public Vector3 Target { get; internal set; }
 
     [SerializeField]
     private float lifespan;
 
     [SerializeField]
-    private Rigidbody myBody;
-
-    [SerializeField]
     private float arcHeight;
-
-    private Vector3 movementSpeedInternal;
 
     // Use this for initialization
     void Start()
     {
-        var heading = this.Owner.Heading.ToEulerAngles();
-        this.movementSpeedInternal = new Vector3(
-            (int)(this.MovementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
-            0,
-            (int)(this.MovementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
-
         this.StartCoroutine(this.Explode());
     }
 
@@ -44,7 +33,9 @@ public class Missile : MonoBehaviour
     private IEnumerator Explode()
     {
         var thetaSpeed = Mathf.PI / this.lifespan;
-        var movementSpeed = this.movementSpeedInternal / this.lifespan;
+        var logicalPosition = this.transform.localPosition;
+        logicalPosition.y = 0;
+        var movementSpeed = (this.Target - this.transform.localPosition);
         var basePosition = this.transform.localPosition;
         for (float t = 0; t < this.lifespan; t += Time.deltaTime)
         {
@@ -55,8 +46,9 @@ public class Missile : MonoBehaviour
 
             yield return null;
         }
-        
-        movementSpeedInternal = Vector3.zero;
+
+        this.transform.localPosition = this.Target;
+
         this.ExplodeTiles();
         this.CommitSuicide();
     }
@@ -74,7 +66,7 @@ public class Missile : MonoBehaviour
 
         if (tile)
         {
-            this.Level.ExplodeAt(tile, 1);
+            this.Level.ExplodeAt(tile, this.BlastRadius);
         }
     }
 }

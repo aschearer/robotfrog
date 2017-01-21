@@ -80,15 +80,27 @@ public class Player : MonoBehaviour {
         }
         else if (this.fireTimer > 0)
         {
+            var column = (int)Mathf.Round(this.transform.localPosition.x);
+            var row = (int)-Mathf.Round(this.transform.localPosition.z);
+
+
+            var heading = this.Heading.ToEulerAngles();
+            var distance = new Vector3(
+                (int)(3 * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
+                0,
+                (int)(3 * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
+
+            var targetColumn = column + distance.x;
+            var targetRow = row - distance.z;
+
             var missile = GameObject.Instantiate(this.MissilePrefab.gameObject);
             missile.transform.SetParent(this.transform.parent);
             missile.transform.localPosition = this.transform.localPosition;
             var missileView = missile.GetComponent<Missile>();
             missileView.Owner = this;
             missileView.Level = this.Level;
-            missileView.MovementSpeed = Mathf.Clamp((int)this.fireTimer, 1, 5);
+            missileView.Target = new Vector3(targetColumn, 0, -targetRow);
             this.fireTimer = 0;
-
         }
     }
 
