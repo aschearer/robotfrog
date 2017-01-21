@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using UnityStandardAssets.ImageEffects;
 
 public class Level : MonoBehaviour {
 
@@ -132,7 +133,16 @@ public class Level : MonoBehaviour {
 
         this.transform.localPosition = position;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.25f);
+
+        var twirl = Camera.main.GetComponent<Twirl>();
+        twirl.angle = 0;
+        twirl.enabled = true;
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            twirl.angle = 180 * t;
+            yield return null;
+        }
 
         // Step 1 destroy all things
         for (int i = 0; i < this.Container.childCount; i++)
@@ -143,6 +153,15 @@ public class Level : MonoBehaviour {
 
         // Step 2 create all things
         this.MakeLevel(this.Map);
+
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            twirl.angle = 180 * (1 - t);
+            yield return null;
+        }
+
+        twirl.angle = 0;
+        twirl.enabled = false;
 
         Level.IsGameOver = false;
     }
