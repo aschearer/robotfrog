@@ -91,7 +91,7 @@ public class TileFloating : Tile {
     public void AddBounceDown()
     {
         UpDownCount = 2;
-        UpDownState = MovingDown;
+        UpDownState = UpDown.MovingDown;
     }
 
 
