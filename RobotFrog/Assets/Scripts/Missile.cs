@@ -24,14 +24,9 @@ public class Missile : MonoBehaviour
 
     private Vector3 movementSpeedInternal;
 
-    public Collider ProjectileCollider;
-    public Collider ExplodeCollider;
-
     // Use this for initialization
     void Start()
     {
-        ProjectileCollider.enabled = true;
-        ExplodeCollider.enabled = false;
         var heading = this.Owner.Heading.ToEulerAngles();
         this.movementSpeedInternal = new Vector3(
             (int)(-this.movementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
@@ -60,9 +55,7 @@ public class Missile : MonoBehaviour
 
             yield return null;
         }
-
-        ProjectileCollider.enabled = false;
-        ExplodeCollider.enabled = true;
+        
         movementSpeedInternal = Vector3.zero;
         this.ExplodeTiles();
         this.CommitSuicide();
@@ -70,14 +63,7 @@ public class Missile : MonoBehaviour
 
     private void CommitSuicide()
     {
-        ProjectileCollider.enabled = false;
-        ExplodeCollider.enabled = false;
         GameObject.Destroy(this.gameObject);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        ExplodeTiles();
     }
 
     private void ExplodeTiles()
