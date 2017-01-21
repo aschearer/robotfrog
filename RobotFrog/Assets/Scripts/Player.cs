@@ -9,7 +9,10 @@ public class Player : MonoBehaviour {
     private Vector3 verticalMovementSpeed;
 
     [SerializeField]
-    public Missile MissilePrefab;
+    private Missile MissilePrefab;
+
+    [SerializeField]
+    private ControllerId playerId;
 
     internal Heading Heading { get; private set; }
 
