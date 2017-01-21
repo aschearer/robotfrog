@@ -11,6 +11,8 @@ public class Player : MonoBehaviour {
     [SerializeField]
     public Missile MissilePrefab;
 
+    private Heading heading;
+
     void Start () {
 	}
 	
@@ -22,6 +24,36 @@ public class Player : MonoBehaviour {
         Vector3 movementVector = Vector3.zero;
         movementVector += this.horizontalMovementSpeed * horizontal;
         movementVector += this.verticalMovementSpeed * vertical;
+
+        Heading? heading = null;
+        if (Input.GetButtonDown("Horizontal"))
+        {
+            if (Mathf.Sign(horizontal) > 0)
+            {
+                heading = Heading.Left;
+            }
+            else if (Mathf.Sign(horizontal) < 0)
+            {
+                heading = Heading.Right;
+            }
+        }
+        else if (Input.GetButtonDown("Vertical"))
+        {
+            if (Mathf.Sign(vertical) > 0)
+            {
+                heading = Heading.Up;
+            }
+            else if (Mathf.Sign(vertical) < 0)
+            {
+                heading = Heading.Down;
+            }
+        }
+
+        if (heading.HasValue && this.heading != heading)
+        {
+            this.heading = heading.Value;
+            this.transform.localEulerAngles = this.heading.ToEulerAngles();
+        }
 
         this.transform.localPosition += movementVector;
         if (fire)
