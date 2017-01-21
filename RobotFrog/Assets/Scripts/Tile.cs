@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using System.Collections;
 
 public class Tile : MonoBehaviour {
     
 
     public List<Player> TouchingPlayers; // this could be only one player
+
+    internal int Column;
+
+    internal int Row;
 
     void Start()
     {
@@ -44,8 +48,9 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    public virtual void HandleExplode()
+    public virtual IEnumerator HandleExplode(float delay)
     {
+        yield return null;
     }
 
     protected virtual void OnPlayerTouchingAdd(Player InPlayer)

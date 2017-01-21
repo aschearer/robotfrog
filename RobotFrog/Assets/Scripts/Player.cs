@@ -39,6 +39,8 @@ public class Player : MonoBehaviour {
     [SerializeField]
     internal ControllerId playerId;
 
+    internal Level Level { get; set; }
+
     void Start () {
         this.horizontalAxisName = "Horizontal-" + this.playerId;
         this.verticalAxisName = "Vertical-" + this.playerId;
@@ -77,6 +79,7 @@ public class Player : MonoBehaviour {
             missile.transform.localPosition = this.transform.localPosition;
             var missileView = missile.GetComponent<Missile>();
             missileView.Owner = this;
+            missileView.Level = this.Level;
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public enum HeightLevel
 {
@@ -88,10 +89,16 @@ public class TileFloating : Tile {
         }
     }
 
-    public override void HandleExplode()
+    public override IEnumerator HandleExplode(float delay)
     {
+        if (delay > 0)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
         UpDownCount = 2;
         UpDownState = UpDown.MovingDown;
+        yield return null;
     }
 
 

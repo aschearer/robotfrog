@@ -7,6 +7,8 @@ public class Missile : MonoBehaviour {
 
     public Player Owner { get; internal set; }
 
+    public Level Level { get;  internal set;}
+
     [SerializeField]
     private float movementpeed;
 
@@ -57,10 +59,13 @@ public class Missile : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        Tile tile = other.GetComponent<Tile>();
-        if(tile)
+        var column = (int)(this.transform.localPosition.x);
+        var row = (int)(this.transform.localPosition.z);
+        var tile = this.Level.GetTileAt(column, row);
+
+        if (tile)
         {
-            tile.HandleExplode();
+            this.Level.ExplodeAt(tile, 1);
         }
     }
 }
