@@ -3,17 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Missile : MonoBehaviour {
+public class Missile : MonoBehaviour
+{
 
     public Player Owner { get; internal set; }
 
-    public Level Level { get;  internal set;}
+    public Level Level { get; internal set; }
 
     [SerializeField]
-    private float movementpeed;
+    private int movementSpeed;
 
     [SerializeField]
     private float lifespan;
+
+    [SerializeField]
+    private Rigidbody myBody;
+
+    [SerializeField]
+    private float arcHeight;
 
     private Vector3 movementSpeedInternal;
 
@@ -21,43 +28,59 @@ public class Missile : MonoBehaviour {
     public Collider ExplodeCollider;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         ProjectileCollider.enabled = true;
         ExplodeCollider.enabled = false;
         var heading = this.Owner.Heading.ToEulerAngles();
         this.movementSpeedInternal = new Vector3(
-            -this.movementpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad), 
+            (int)(-this.movementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
             0,
-            -this.movementpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad));
+            (int)(-this.movementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
 
         this.StartCoroutine(this.Explode());
     }
 
     // Update is called once per frame
-    void Update () {
-        this.transform.localPosition += this.movementSpeedInternal * Time.deltaTime;
+    void Update()
+    {
     }
 
     private IEnumerator Explode()
     {
-        yield return new WaitForSeconds(this.lifespan);
+        var thetaSpeed = Mathf.PI / this.lifespan;
+        var movementSpeed = this.movementSpeedInternal / this.lifespan;
+        var basePosition = this.transform.localPosition;
+        for (float t = 0; t < this.lifespan; t += Time.deltaTime)
+        {
+            var y = Mathf.Sin(t * thetaSpeed);
+            var position = t * movementSpeed;
+            position.y = y * this.arcHeight;
+            this.transform.localPosition = basePosition + position;
+
+            yield return null;
+        }
 
         ProjectileCollider.enabled = false;
         ExplodeCollider.enabled = true;
         movementSpeedInternal = Vector3.zero;
-        this.StartCoroutine(this.CommitSuicide());
+        this.ExplodeTiles();
+        this.CommitSuicide();
     }
 
-    private IEnumerator CommitSuicide()
+    private void CommitSuicide()
     {
-        yield return new WaitForSeconds(this.lifespan);
-
         ProjectileCollider.enabled = false;
         ExplodeCollider.enabled = false;
         GameObject.Destroy(this.gameObject);
     }
 
     void OnTriggerEnter(Collider other)
+    {
+        ExplodeTiles();
+    }
+
+    private void ExplodeTiles()
     {
         var column = (int)(this.transform.localPosition.x);
         var row = (int)(this.transform.localPosition.z);
