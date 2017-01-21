@@ -14,14 +14,23 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private ControllerId playerId;
 
+    private string horizontalAxisName;
+
+    private string verticalAxisName;
+
+    private string fireAxisName;
+
     internal Heading Heading { get; private set; }
 
     void Start () {
-	}
+        this.horizontalAxisName = "Horizontal-" + this.playerId;
+        this.verticalAxisName = "Vertical-" + this.playerId;
+        this.fireAxisName = "Fire1-" + this.playerId;
+    }
 	
 	void Update () {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis(this.horizontalAxisName);
+        float vertical = Input.GetAxis(this.verticalAxisName);
 
         Vector3 movementVector = Vector3.zero;
         movementVector += this.horizontalMovementSpeed * horizontal;
@@ -58,7 +67,7 @@ public class Player : MonoBehaviour {
         }
 
         this.transform.localPosition += movementVector;
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown(this.fireAxisName))
         {
             var missile = GameObject.Instantiate(this.MissilePrefab.gameObject);
             missile.transform.SetParent(this.transform.parent);
