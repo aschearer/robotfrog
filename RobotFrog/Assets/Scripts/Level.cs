@@ -48,18 +48,19 @@ public class Level : MonoBehaviour {
 				Vector3 Position = this.transform.localPosition + new Vector3(i*TileRadius, 0, j*TileRadius);
 				Quaternion Rotation = Quaternion.identity;
 				GameObject Prefab = null;
+                string name = string.Empty;
 				switch(row[j])
 				{
 					default: break;
-					case '_': Prefab = TileFloating; break;
-					case 'X': Prefab = TileRock; break;
-					case 'B': Prefab = TileBouncing; break;
+					case '_': Prefab = TileFloating; name = "Floating"; break;
+					case 'X': Prefab = TileRock; name = "Rock"; break;
+					case 'B': Prefab = TileBouncing; name = "Bouncing"; break;
 				}
 
 				if (Prefab != null)
 				{
 					GameObject Tile = Instantiate(Prefab, Position, Rotation, this.transform);
-					Tile.name = "Tile" + i + "," + j;
+					Tile.name = name + i + "," + j;
 				}
 				else
 				{
@@ -68,7 +69,6 @@ public class Level : MonoBehaviour {
 					Tile.name = "Tile" + i + "," + j;
 
 					Prefab = Player;
-					string name = string.Empty;
 					ControllerId controllerId = ControllerId.KeyboardLeft;
 					switch (row[j])
 					{
