@@ -55,6 +55,11 @@ public class Player : MonoBehaviour {
     
     void Update ()
     {
+        if (Level.IsGameOver)
+        {
+            return;
+        }
+
         float horizontal = Input.GetAxis(this.horizontalAxisName);
         float vertical = Input.GetAxis(this.verticalAxisName);
 

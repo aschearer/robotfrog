@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class Level : MonoBehaviour {
-    
+
+    public static bool IsGameOver;
+
     public GameObject TileBarrier;
     public GameObject TileFloating;
     public GameObject TileWater;
@@ -92,19 +95,11 @@ public class Level : MonoBehaviour {
             }
         }
 
-        if (playerCount < 2)
+        if (playerCount < 2 && !Level.IsGameOver)
         {
             // Game is over
-
-            // Step 1 destroy all things
-            for (int i = 0; i < this.Container.childCount; i++)
-            {
-                var child = this.Container.GetChild(i);
-                GameObject.Destroy(child.gameObject);
-            }
-
-            // Step 2 create all things
-            this.MakeLevel(this.Map);
+            Level.IsGameOver = true;
+            this.StartCoroutine(this.GameOverSequence());
         }
 
         // Test code to trigger explosions via mouse
@@ -121,6 +116,35 @@ public class Level : MonoBehaviour {
         ////        }
         ////    }
         ////}
+    }
+
+    private IEnumerator GameOverSequence()
+    {
+        var position = this.transform.localPosition;
+        for (float t = 0; t < 1; t += Time.deltaTime * 5)
+        {
+            var shakenPosition = position;
+            shakenPosition.x = UnityEngine.Random.Range(-0.1f, 0.1f);
+            shakenPosition.y = UnityEngine.Random.Range(-0.1f, 0.1f);
+            this.transform.localPosition = shakenPosition;
+            yield return null;
+        }
+
+        this.transform.localPosition = position;
+
+        yield return new WaitForSeconds(1f);
+
+        // Step 1 destroy all things
+        for (int i = 0; i < this.Container.childCount; i++)
+        {
+            var child = this.Container.GetChild(i);
+            GameObject.Destroy(child.gameObject);
+        }
+
+        // Step 2 create all things
+        this.MakeLevel(this.Map);
+
+        Level.IsGameOver = false;
     }
 
     public void ExplodeAt(Tile tile, int radius)
