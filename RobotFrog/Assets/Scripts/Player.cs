@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Player : MonoBehaviour {
 
@@ -75,5 +78,22 @@ public class Player : MonoBehaviour {
             var missileView = missile.GetComponent<Missile>();
             missileView.Owner = this;
         }
+    }
+
+    public void HandleSurfaceChange(bool bIsBelowWater)
+    {
+    	if(bIsBelowWater)
+    	{
+    		// die
+    		this.transform.localScale = 0.1f*Vector3.one;
+
+        	this.StartCoroutine(this.Respawn());
+    	}
+    }
+
+    private IEnumerator Respawn()
+    {
+    	yield return new WaitForSeconds(3.0f);
+    	this.transform.localScale = Vector3.one;
     }
 }

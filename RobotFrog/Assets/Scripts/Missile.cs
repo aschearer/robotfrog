@@ -55,8 +55,12 @@ public class Missile : MonoBehaviour {
         GameObject.Destroy(this.gameObject);
     }
 
-    void OnCollisionEnter(Collision c)
+    void OnTriggerEnter(Collider other)
     {
-        Debug.Log(c);
+        Tile tile = other.GetComponent<Tile>();
+        if(tile)
+        {
+            tile.HandleExplode();
+        }
     }
 }

@@ -28,7 +28,7 @@ public class TileFloating : Tile {
 
     public int Steps = 5;
 
-    public float Amplitude = 0.25f;
+    protected float Amplitude = 0.75f;
 
 	void Start ()
 	{
@@ -88,7 +88,7 @@ public class TileFloating : Tile {
         }
     }
 
-    public void AddBounceDown()
+    public override void HandleExplode()
     {
         UpDownCount = 2;
         UpDownState = UpDown.MovingDown;
@@ -97,7 +97,7 @@ public class TileFloating : Tile {
 
     protected override void HandlePlayerAdd(Player InPlayer)
     {
-        //InPlayer.NotifySurface(Height < 0);
+        InPlayer.HandleSurfaceChange(Height < 0);
     }
 
     protected void HandleHeightChange()
@@ -105,9 +105,9 @@ public class TileFloating : Tile {
         Vector3 TilePosition = this.transform.position;
         TilePosition.y = (float)Height/Steps*Amplitude;
         this.transform.position = TilePosition;
-        foreach(Player dude in TouchingPlayers)
+        foreach(Player player in TouchingPlayers)
         {
-            //dude.NotifySurface(Height < 0);
+            player.HandleSurfaceChange(Height < 0);
         }
     }
 }

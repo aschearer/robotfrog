@@ -7,37 +7,43 @@ public class Tile : MonoBehaviour {
 
     public List<Player> TouchingPlayers; // this could be only one player
 
-
-    void OnTriggerEnter(Collider InCollider)
+    void Start()
     {
-    	Player InPlayer = InCollider.GetComponent<Player>();
-    	if(InPlayer)
+
+    }
+
+    void OnCollisionEnter(Collision InCollision)
+    {
+    	Collider OtherCollider = InCollision.collider;
+    	Player OtherPlayer = OtherCollider.GetComponent<Player>();
+    	if(OtherPlayer)
     	{
-	    	if(!TouchingPlayers.Contains(InPlayer))
+	    	if(!TouchingPlayers.Contains(OtherPlayer))
 	    	{
-	    		TouchingPlayers.Add(InPlayer);
+	    		TouchingPlayers.Add(OtherPlayer);
 	    	}
 	    }
 	    else
 	    {
-	    	Debug.Log("Not a player?"+InCollider);
+	    	//Debug.Log("Not a player?"+OtherCollider);
 	    }
     }
 
-    void OnTriggerExit(Collider InCollider)
+    void OnCollisionExit(Collision InCollision)
     {
-    	Player InPlayer = InCollider.GetComponent<Player>();
-    	if(InPlayer)
+    	Collider OtherCollider = InCollision.collider;
+    	Player OtherPlayer = OtherCollider.GetComponent<Player>();
+    	if(OtherPlayer)
     	{
-	    	if(TouchingPlayers.Contains(InPlayer))
+	    	if(TouchingPlayers.Contains(OtherPlayer))
 	    	{
-	    		TouchingPlayers.Remove(InPlayer);
+	    		TouchingPlayers.Remove(OtherPlayer);
 	    	}
 	    }
-	    else
-	    {
-	    	Debug.Log("Not a player?"+InCollider);
-	    }
+    }
+
+    public virtual void HandleExplode()
+    {
     }
 
     protected virtual void HandlePlayerAdd(Player InPlayer)
