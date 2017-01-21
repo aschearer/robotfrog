@@ -43,6 +43,10 @@ public class Player : MonoBehaviour {
 
     internal Level Level { get; set; }
 
+    internal Color Tint { get; set; }
+
+    internal Cursor Cursor { get; set; }
+
     void Start () {
         this.horizontalAxisName = "Horizontal-" + this.playerId;
         this.verticalAxisName = "Vertical-" + this.playerId;
@@ -77,9 +81,12 @@ public class Player : MonoBehaviour {
         if (Input.GetButton(this.fireAxisName))
         {
             this.fireTimer += Time.deltaTime * 2f;
+            this.Cursor.ShowLine(2);
         }
         else if (this.fireTimer > 0)
         {
+
+            this.Cursor.ShowLine(-1);
             var column = (int)Mathf.Round(this.transform.localPosition.x);
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
 

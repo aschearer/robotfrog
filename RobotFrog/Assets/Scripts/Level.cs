@@ -10,6 +10,7 @@ public class Level : MonoBehaviour {
     public GameObject TileBox;
     public GameObject TileRock;
     public GameObject Player;
+    public GameObject CursorProto;
 
     public Transform Container;
 
@@ -167,6 +168,7 @@ public class Level : MonoBehaviour {
                 Quaternion Rotation = Quaternion.identity;
                 GameObject Prefab = null;
                 string name = string.Empty;
+                Color Tint = Color.white;
                 switch(tiles[column])
                 {
                     default: break;
@@ -203,10 +205,12 @@ public class Level : MonoBehaviour {
                     {
                         case '1':
                             name = "Player1";
+                            Tint = Color.red;
                             break;
                         case '2':
                             name = "Player2";
                             controllerId = ControllerId.KeyboardRight;
+                            Tint = Color.blue;
                             break;
                     }
 
@@ -216,6 +220,15 @@ public class Level : MonoBehaviour {
                     var playerView = player.GetComponent<Player>();
                     playerView.playerId = controllerId;
                     playerView.Level = this;
+                    playerView.Tint = Tint;
+
+
+                    GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);
+                    cursor.transform.SetParent(player.transform, false);
+                    var cursorView = cursor.GetComponent<Cursor>();
+                    cursorView.Tint = Tint;
+
+                    playerView.Cursor = cursorView;
                 }
 
                 if (this.tiles[this.tiles.Count - 1] != null)
