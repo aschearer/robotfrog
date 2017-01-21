@@ -15,6 +15,9 @@ public class Missile : MonoBehaviour {
     [SerializeField]
     private float lifespan;
 
+    [SerializeField]
+    private Rigidbody myBody;
+
     private Vector3 movementSpeedInternal;
 
     public Collider ProjectileCollider;
@@ -35,7 +38,7 @@ public class Missile : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        this.transform.localPosition += this.movementSpeedInternal * Time.deltaTime;
+        this.myBody.MovePosition(this.transform.position + (30 * movementSpeedInternal * Time.deltaTime));
     }
 
     private IEnumerator Explode()
