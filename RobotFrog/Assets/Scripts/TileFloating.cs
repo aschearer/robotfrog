@@ -20,8 +20,10 @@ public class TileFloating : Tile {
 
     public GameObject Platform;
 
-    public bool CanFlip;
     public bool IsFlipped;
+
+    public TileState DefaultState;
+    public TileState FlippedState;
     
     [SerializeField]
     private int Height;
@@ -38,6 +40,7 @@ public class TileFloating : Tile {
 
     void Start ()
     {
+        State = DefaultState;
         Timer = new ManualTimer();
         Timer.SetTime(0.1f);
         if(UpDownCount == -1)
@@ -91,9 +94,10 @@ public class TileFloating : Tile {
         if(Height <= -Steps)
         {
             UpDownState = UpDown.MovingUp;
-            if(CanFlip)
+            if(DefaultState != FlippedState)
             {
                 IsFlipped = !IsFlipped;
+                State = IsFlipped ? FlippedState : DefaultState;
                 Platform.transform.localRotation =  Quaternion.Euler(IsFlipped ? 180f: 0f, 0f, 0f);
                 Platform.transform.localPosition = Vector3.up * (IsFlipped ? 0.95f : 0.01f);
             }

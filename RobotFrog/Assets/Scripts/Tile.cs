@@ -2,6 +2,16 @@
 using System.Collections.Generic;
 using System.Collections;
 
+public enum TileState
+{
+	Wall,
+	Water,
+	SinkingPad,
+	FloatingBox,
+	Rock,
+	Spike,
+}
+
 public class Tile : MonoBehaviour {
     
 
@@ -11,9 +21,11 @@ public class Tile : MonoBehaviour {
 
     internal int Row;
 
+    public TileState State;
+
     void Start()
     {
-
+    	State = TileState.Water;
     }
 
     void OnCollisionEnter(Collision InCollision)
