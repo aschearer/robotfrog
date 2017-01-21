@@ -25,7 +25,7 @@ public class Player : MonoBehaviour {
         movementVector += this.verticalMovementSpeed * vertical;
 
         Heading? heading = null;
-        if (Input.GetButtonDown("Horizontal"))
+        if (!Mathf.Approximately(horizontal, 0))
         {
             if (Mathf.Sign(horizontal) > 0)
             {
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
                 heading = Heading.Right;
             }
         }
-        else if (Input.GetButtonDown("Vertical"))
+        else if (!Mathf.Approximately(vertical, 0))
         {
             if (Mathf.Sign(vertical) > 0)
             {
