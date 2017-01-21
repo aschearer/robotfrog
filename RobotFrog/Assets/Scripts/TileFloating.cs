@@ -17,19 +17,33 @@ public enum UpDown
 
 public class TileFloating : Tile {
     
-    public HeightLevel Height;
-    public UpDown UpDownState;
-    public ManualTimer Timer;
+    [SerializeField]
+    private int Height;
+    [SerializeField]
+    private UpDown UpDownState;
+    [SerializeField]
+    private ManualTimer Timer;
+
     public int UpDownCount;
+
+    public int Steps = 5;
+
+    public float Amplitude = 0.25f;
 
 	void Start ()
 	{
+        Timer = new ManualTimer();
+        Timer.SetTime(0.1f);
+        if(UpDownCount == -1)
+        {
+            UpDownState = UpDown.MovingUp;
+        }
 	}
 	
 	void Update () 
 	{
         float DeltaTime = Time.deltaTime;
-        if(UpDownCount > 0 || UpDownCount == -1 && Timer.Tick(DeltaTime))
+        if(IsMoving() && Timer.Tick(DeltaTime))
         {
         	if(UpDownState == UpDown.MovingUp)
         	{
@@ -40,35 +54,24 @@ public class TileFloating : Tile {
         		MoveDown();
         	}
             HandleHeightChange();
-	    	if(Height == HeightLevel.Neutral)
-	    	{
-	    		if(UpDownCount != -1)
-	    		{
-	    			UpDownCount--;
-	    		}
-	    	}
+	    	if(Height == 0 && UpDownCount != -1)
+    		{
+    			UpDownCount--;
+    		}
         }
+    }
+    bool IsMoving()
+    {
+        // -1 is an always moving floating tile
+        return UpDownCount > 0 || UpDownCount == -1;
     }
 
     void MoveUp()
     {
-    	switch(Height)
-    	{
-    		case HeightLevel.Valley: 
-    			Height = HeightLevel.Neutral;
-    			break;
-
-    		case HeightLevel.Neutral: 
-    			Height = HeightLevel.Peak;
-    			break;
-    		default:
-    		case HeightLevel.Peak: 
-    			Debug.Log("bad state moveup");
-    			break;
-    	}
+        Height++;
 
     	// reflect
-    	if(Height == HeightLevel.Peak)
+    	if(Height >= Steps)
     	{
 			UpDownState = UpDown.MovingDown;
     	}
@@ -76,39 +79,35 @@ public class TileFloating : Tile {
 
     void MoveDown()
     {
-    	switch(Height)
-    	{
-    		case HeightLevel.Peak: 
-    			Height = HeightLevel.Neutral;
-    			break;
+        Height--;
 
-    		case HeightLevel.Neutral: 
-    			Height = HeightLevel.Valley;
-    			break;
-    		default:
-    		case HeightLevel.Valley: 
-    			Debug.Log("bad state movedown");
-    			break;
-    	}
+        // reflect
+        if(Height <= -Steps)
+        {
+            UpDownState = UpDown.MovingUp;
+        }
+    }
 
-    	// reflect
-    	if(Height == HeightLevel.Valley)
-    	{
-			UpDownState = UpDown.MovingUp;
-    	}
+    public void AddBounceDown()
+    {
+        UpDownCount = 2;
+        UpDownState = MovingDown;
     }
 
 
     protected override void HandlePlayerAdd(Player InPlayer)
     {
-        //InPlayer.NotifySurface(Height == HeightLevel.Valley);
+        //InPlayer.NotifySurface(Height < 0);
     }
 
     protected void HandleHeightChange()
     {
+        Vector3 TilePosition = this.transform.position;
+        TilePosition.y = (float)Height/Steps*Amplitude;
+        this.transform.position = TilePosition;
         foreach(Player dude in TouchingPlayers)
         {
-            //dude.NotifySurface(Height == HeightLevel.Valley);
+            //dude.NotifySurface(Height < 0);
         }
     }
 }

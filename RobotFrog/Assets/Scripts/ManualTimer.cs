@@ -4,6 +4,12 @@ public class ManualTimer {
 
     public float TimeRemaining = 1.0f;
     public float Duration = 1.0f;
+    
+    public void SetTime(float InDuration)
+    {
+    	TimeRemaining = InDuration;
+    	Duration = InDuration;
+    }
 
     public bool Tick(float DeltaTime)
     {
@@ -15,4 +21,5 @@ public class ManualTimer {
     	}
     	return false;
     }
+
 }
