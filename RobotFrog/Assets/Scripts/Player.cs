@@ -11,7 +11,7 @@ public class Player : MonoBehaviour {
     [SerializeField]
     public Missile MissilePrefab;
 
-    private Heading heading;
+    internal Heading Heading { get; private set; }
 
     void Start () {
 	}
@@ -19,7 +19,6 @@ public class Player : MonoBehaviour {
 	void Update () {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        bool fire = Input.GetButtonDown("Fire1");
 
         Vector3 movementVector = Vector3.zero;
         movementVector += this.horizontalMovementSpeed * horizontal;
@@ -49,14 +48,14 @@ public class Player : MonoBehaviour {
             }
         }
 
-        if (heading.HasValue && this.heading != heading)
+        if (heading.HasValue && this.Heading != heading)
         {
-            this.heading = heading.Value;
-            this.transform.localEulerAngles = this.heading.ToEulerAngles();
+            this.Heading = heading.Value;
+            this.transform.localEulerAngles = this.Heading.ToEulerAngles();
         }
 
         this.transform.localPosition += movementVector;
-        if (fire)
+        if (Input.GetButtonDown("Fire1"))
         {
             var missile = GameObject.Instantiate(this.MissilePrefab.gameObject);
             missile.transform.SetParent(this.transform.parent);
