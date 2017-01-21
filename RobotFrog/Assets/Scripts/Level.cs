@@ -6,7 +6,7 @@ public class Level : MonoBehaviour {
     
     public GameObject TileRock;
     public GameObject TileFloating;
-    public GameObject TileBouncing;
+    public GameObject TileWater;
     public GameObject Player;
 
     public Transform Container;
@@ -60,11 +60,11 @@ public class Level : MonoBehaviour {
 
             // 10x7 with columns
             Map.Add("XXXXXXXXXX");
-            Map.Add("X1__XX___X");
-            Map.Add("X_X____X_X");
-            Map.Add("X___XX___X");
-            Map.Add("X_X____X_X");
-            Map.Add("X___XX__2X");
+            Map.Add("X_______WX");
+            Map.Add("X_1__W___X");
+            Map.Add("X________X");
+            Map.Add("X___W__2_X");
+            Map.Add("XW_______X");
             Map.Add("XXXXXXXXXX");
         }
         MakeLevel(Map);
@@ -137,7 +137,7 @@ public class Level : MonoBehaviour {
                     default: break;
                     case '_': Prefab = TileFloating; name = "Floating"; break;
                     case 'X': Prefab = TileRock; name = "Rock"; break;
-                    case 'B': Prefab = TileBouncing; name = "Bouncing"; break;
+                    case 'W': Prefab = TileWater; name = "Water"; break;
                 }
 
                 if (Prefab != null)
