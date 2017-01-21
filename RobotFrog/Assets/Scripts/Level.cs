@@ -9,6 +9,7 @@ public class Level : MonoBehaviour {
     public GameObject TileBouncing;
     public GameObject Player;
 
+    public Transform Container;
 
     public List<string> Map;
 
@@ -18,23 +19,44 @@ public class Level : MonoBehaviour {
     {
         if(Map.Count == 0)
         {
-            Map.Add("XXXXXXXXXXXXXXXXXX");
-            Map.Add("X________________X");
-            Map.Add("X___1________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X___B________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X____________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X____________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X____________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X____________X_X_X");
-            Map.Add("X________________X");
-            Map.Add("X___________2X_X_X");
-            Map.Add("X________________X");
-            Map.Add("XXXXXXXXXXXXXXXXXX");
+            // 12x12 including walls
+            ////Map.Add("XXXXXXXXXXXX");
+            ////Map.Add("X__________X");
+            ////Map.Add("X_1________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X________2_X");
+            ////Map.Add("X__________X");
+            ////Map.Add("XXXXXXXXXXXX");
+
+            // 7x7
+            ////Map.Add("XXXXXXX");
+            ////Map.Add("X_____X");
+            ////Map.Add("X_____X");
+            ////Map.Add("X_____X");
+            ////Map.Add("X_____X");
+            ////Map.Add("X_____X");
+            ////Map.Add("XXXXXXX");
+
+            // 12x7
+            ////Map.Add("XXXXXXXXXXXX");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("X__________X");
+            ////Map.Add("XXXXXXXXXXXX");
+
+            // 10x7
+            Map.Add("XXXXXXXXXX");
+            Map.Add("X________X");
+            Map.Add("X_1______X");
+            Map.Add("X________X");
+            Map.Add("X______2_X");
+            Map.Add("X________X");
+            Map.Add("XXXXXXXXXX");
         }
         MakeLevel(Map);
     }
@@ -90,16 +112,18 @@ public class Level : MonoBehaviour {
     public void MakeLevel(List<string> Map)
     {
         int TileRadius = 1;
-        for(int i=0; i<Map.Count; ++i)
+        int numberOfColumns = 0;
+        for(int row=0; row<Map.Count; ++row)
         {
-            string row = Map[i];
-            for(int j=0; j<row.Length; ++j)
+            string tiles = Map[row];
+            numberOfColumns = tiles.Length;
+            for(int column=0; column<tiles.Length; ++column)
             {
-                Vector3 Position = this.transform.localPosition + new Vector3(i*TileRadius, 0, j*TileRadius);
+                Vector3 Position = this.transform.localPosition + new Vector3(column*TileRadius, 0, -row*TileRadius);
                 Quaternion Rotation = Quaternion.identity;
                 GameObject Prefab = null;
                 string name = string.Empty;
-                switch(row[j])
+                switch(tiles[column])
                 {
                     default: break;
                     case '_': Prefab = TileFloating; name = "Floating"; break;
@@ -109,8 +133,8 @@ public class Level : MonoBehaviour {
 
                 if (Prefab != null)
                 {
-                    GameObject Tile = Instantiate(Prefab, Position, Rotation, this.transform);
-                    Tile.name = name + i + "," + j;
+                    GameObject Tile = Instantiate(Prefab, Position, Rotation, this.Container);
+                    Tile.name = name + row + "," + column;
                     if (Prefab == TileFloating || Prefab == TileRock)
                     {
                         this.tiles.Add(Tile.GetComponent<Tile>());
@@ -123,13 +147,13 @@ public class Level : MonoBehaviour {
                 else
                 {
                     // Create an ordinary ground tile
-                    GameObject Tile = Instantiate(TileFloating, Position, Rotation, this.transform);
-                    Tile.name = "Tile" + i + "," + j;
+                    GameObject Tile = Instantiate(TileFloating, Position, Rotation, this.Container);
+                    Tile.name = "Tile" + row + "," + column;
                     this.tiles.Add(Tile.GetComponent<Tile>());
 
                     Prefab = Player;
                     ControllerId controllerId = ControllerId.KeyboardLeft;
-                    switch (row[j])
+                    switch (tiles[column])
                     {
                         case '1':
                             name = "Player1";
@@ -141,7 +165,7 @@ public class Level : MonoBehaviour {
                     }
 
                     Position.y += 1;
-                    GameObject player = Instantiate(Prefab, Position, Rotation, this.transform);
+                    GameObject player = Instantiate(Prefab, Position, Rotation, this.Container);
                     player.name = name;
                     var playerView = player.GetComponent<Player>();
                     playerView.playerId = controllerId;
@@ -151,10 +175,17 @@ public class Level : MonoBehaviour {
                 if (this.tiles[this.tiles.Count - 1] != null)
                 {
                     var tile = this.tiles[this.tiles.Count - 1];
-                    tile.Column = i;
-                    tile.Row = j;
+                    tile.Column = row;
+                    tile.Row = column;
                 }
             }
+        }
+
+        if (numberOfColumns > 0)
+        {
+            var containerPosition = this.Container.transform.localPosition;
+            containerPosition.x = -((numberOfColumns - 1) / 2f);
+            this.Container.transform.localPosition = containerPosition;
         }
     }
 }
