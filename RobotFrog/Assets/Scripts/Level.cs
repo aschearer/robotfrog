@@ -4,9 +4,11 @@ using System;
 
 public class Level : MonoBehaviour {
     
-    public GameObject TileRock;
+    public GameObject TileBarrier;
     public GameObject TileFloating;
     public GameObject TileWater;
+    public GameObject TileBox;
+    public GameObject TileRock;
     public GameObject Player;
 
     public Transform Container;
@@ -62,7 +64,7 @@ public class Level : MonoBehaviour {
             Map.Add("XXXXXXXXXX");
             Map.Add("X_______WX");
             Map.Add("X_1__W___X");
-            Map.Add("X________X");
+            Map.Add("X___RB___X");
             Map.Add("X___W__2_X");
             Map.Add("XW_______X");
             Map.Add("XXXXXXXXXX");
@@ -136,8 +138,10 @@ public class Level : MonoBehaviour {
                 {
                     default: break;
                     case '_': Prefab = TileFloating; name = "Floating"; break;
-                    case 'X': Prefab = TileRock; name = "Rock"; break;
+                    case 'X': Prefab = TileBarrier; name = "Barrier"; break;
                     case 'W': Prefab = TileWater; name = "Water"; break;
+                    case 'B': Prefab = TileBox; name = "Box"; break;
+                    case 'R': Prefab = TileRock; name = "Rock"; break;
                 }
 
                 if (Prefab != null)

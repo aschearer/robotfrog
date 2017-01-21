@@ -4,7 +4,7 @@ using System.Collections;
 
 public enum TileState
 {
-	Wall,
+	Barrier,
 	Water,
 	SinkingPad,
 	FloatingBox,
@@ -25,7 +25,6 @@ public class Tile : MonoBehaviour {
 
     void Start()
     {
-    	State = TileState.Water;
     }
 
     void OnCollisionEnter(Collision InCollision)
@@ -67,7 +66,7 @@ public class Tile : MonoBehaviour {
 
     protected virtual void OnPlayerTouchingAdd(Player InPlayer)
     {
-    	InPlayer.HandleSurfaceChange(true);
+    	InPlayer.HandleSurfaceChange(State == TileState.Water);
     }
 
     protected virtual void OnPlayerTouchingRemove(Player InPlayer)
