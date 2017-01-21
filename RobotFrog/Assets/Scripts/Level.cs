@@ -50,12 +50,21 @@ public class Level : MonoBehaviour {
             ////Map.Add("XXXXXXXXXXXX");
 
             // 10x7
+            ////Map.Add("XXXXXXXXXX");
+            ////Map.Add("X________X");
+            ////Map.Add("X_1______X");
+            ////Map.Add("X________X");
+            ////Map.Add("X______2_X");
+            ////Map.Add("X________X");
+            ////Map.Add("XXXXXXXXXX");
+
+            // 10x7 with columns
             Map.Add("XXXXXXXXXX");
-            Map.Add("X________X");
-            Map.Add("X_1______X");
-            Map.Add("X________X");
-            Map.Add("X______2_X");
-            Map.Add("X________X");
+            Map.Add("X1__XX___X");
+            Map.Add("X_X____X_X");
+            Map.Add("X___XX___X");
+            Map.Add("X_X____X_X");
+            Map.Add("X___XX__2X");
             Map.Add("XXXXXXXXXX");
         }
         MakeLevel(Map);
@@ -175,8 +184,8 @@ public class Level : MonoBehaviour {
                 if (this.tiles[this.tiles.Count - 1] != null)
                 {
                     var tile = this.tiles[this.tiles.Count - 1];
-                    tile.Column = row;
-                    tile.Row = column;
+                    tile.Column = column;
+                    tile.Row = row;
                 }
             }
         }

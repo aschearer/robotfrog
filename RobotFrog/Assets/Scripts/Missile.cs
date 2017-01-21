@@ -29,9 +29,9 @@ public class Missile : MonoBehaviour
     {
         var heading = this.Owner.Heading.ToEulerAngles();
         this.movementSpeedInternal = new Vector3(
-            (int)(-this.movementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
+            (int)(this.movementSpeed * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
             0,
-            (int)(-this.movementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
+            (int)(this.movementSpeed * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
 
         this.StartCoroutine(this.Explode());
     }
@@ -69,7 +69,7 @@ public class Missile : MonoBehaviour
     private void ExplodeTiles()
     {
         var column = (int)(this.transform.localPosition.x);
-        var row = (int)(this.transform.localPosition.z);
+        var row = (int)(-this.transform.localPosition.z);
         var tile = this.Level.GetTileAt(column, row);
 
         if (tile)
