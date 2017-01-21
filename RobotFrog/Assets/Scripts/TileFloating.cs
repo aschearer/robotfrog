@@ -130,9 +130,20 @@ public class TileFloating : Tile {
     protected void HandleHeightChange()
     {
         Vector3 TilePosition = this.transform.position;
-        TilePosition.y = (float)Height/Steps*Amplitude;
+        float VerticalOffset = (float)Height/Steps*Amplitude;
+        TilePosition.y = VerticalOffset;
         this.transform.position = TilePosition;
-        Platform.SetActive(Height >= 0);
+        switch(State)
+        {
+            case TileState.SinkingPad:
+            case TileState.Spike:
+                Platform.SetActive(Height >= 0);
+                break;
+            case TileState.Rock:
+                Platform.SetActive(Height <= 0);
+                Platform.transform.localPosition = -Vector3.up*VerticalOffset;
+                break;
+        }
 
         foreach(Player player in TouchingPlayers)
         {
