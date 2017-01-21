@@ -11,9 +11,6 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private Missile MissilePrefab;
 
-    [SerializeField]
-    private ControllerId playerId;
-
     private string horizontalAxisName;
 
     private string verticalAxisName;
@@ -21,6 +18,9 @@ public class Player : MonoBehaviour {
     private string fireAxisName;
 
     internal Heading Heading { get; private set; }
+
+    [SerializeField]
+    internal ControllerId playerId;
 
     void Start () {
         this.horizontalAxisName = "Horizontal-" + this.playerId;
