@@ -143,9 +143,7 @@ public class Player : MonoBehaviour {
         if(bIsBelowWater)
         {
             // die
-            this.transform.localScale = 0.1f*Vector3.one;
-
-            this.StartCoroutine(this.Respawn());
+            GameObject.Destroy(this.gameObject);
         }
     }
 

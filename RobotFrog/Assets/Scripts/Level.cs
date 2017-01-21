@@ -74,6 +74,38 @@ public class Level : MonoBehaviour {
 
     public void Update()
     {
+        // Test for end-game condition
+        int playerCount = 0;
+        for (int i = 0; i < this.Container.childCount; i++)
+        {
+            var child = this.Container.GetChild(i);
+            var player = child.GetComponent<Player>();
+            if (player)
+            {
+                playerCount++;
+            }
+
+            if (playerCount == 2)
+            {
+                break;
+            }
+        }
+
+        if (playerCount < 2)
+        {
+            // Game is over
+
+            // Step 1 destroy all things
+            for (int i = 0; i < this.Container.childCount; i++)
+            {
+                var child = this.Container.GetChild(i);
+                GameObject.Destroy(child.gameObject);
+            }
+
+            // Step 2 create all things
+            this.MakeLevel(this.Map);
+        }
+
         // Test code to trigger explosions via mouse
         ////if (Input.GetMouseButtonDown(0))
         ////{
@@ -122,6 +154,7 @@ public class Level : MonoBehaviour {
 
     public void MakeLevel(List<string> Map)
     {
+        this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
         int numberOfColumns = 0;
         for(int row=0; row<Map.Count; ++row)
@@ -196,7 +229,7 @@ public class Level : MonoBehaviour {
 
         if (numberOfColumns > 0)
         {
-            var containerPosition = this.Container.transform.localPosition;
+            var containerPosition = Vector3.zero;
             containerPosition.x = -((numberOfColumns - 1) / 2f);
             this.Container.transform.localPosition = containerPosition;
         }

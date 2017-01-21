@@ -147,7 +147,10 @@ public class TileFloating : Tile {
 
         foreach(Player player in TouchingPlayers)
         {
-            player.HandleSurfaceChange(Height < 0);
+            if (player)
+            {
+                player.HandleSurfaceChange(Height < 0);
+            }
         }
     }
 }
