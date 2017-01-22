@@ -427,7 +427,7 @@ public class Level : MonoBehaviour {
         {
             for(int column=-1; column<=numberOfColumns; ++column)
             {
-                Vector3 Position = this.transform.localPosition + new Vector3(column*TileRadius, 0.5f, -row*TileRadius);
+                Vector3 Position = this.Container.localPosition + new Vector3(0.25f + column*TileRadius, 0.5f, -row*TileRadius);
                 Quaternion Rotation = Quaternion.identity;
                 Position.x -= 2;
                 if(row == -1 || row == Map.Count)
