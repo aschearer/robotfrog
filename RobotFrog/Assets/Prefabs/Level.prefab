@@ -80,9 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d271ff564669b104695b95f80abcab67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: 0
-  MinPlayers: 2
-  MaxPlayers: 2
+  PlayerCount: 2
   TileBarrier: {fileID: 1555264021768636, guid: d2d72c48788e574489f90564ede5ad40,
     type: 2}
   TileFloating: {fileID: 1065305165739622, guid: 7f8655786b11e654fbf4b0ab10b6cc92,
@@ -105,6 +103,8 @@ MonoBehaviour:
   DecoOneProto: {fileID: 1262095652334900, guid: 55859c99f512d124eb73adb017c77453,
     type: 2}
   DecoTwoProto: {fileID: 1226594984143428, guid: e27e6f62cfde81046bfa8d019a0c47e2,
+    type: 2}
+  Player1SpotProto: {fileID: 1988962737190274, guid: 65402a6539aed784694bf0c4f195a4fb,
     type: 2}
   CommonMain: {fileID: 2100000, guid: affd0fd84339f724993cb2a93dae8910, type: 2}
   CommonAlt: {fileID: 2100000, guid: 5101c71647ea126469c43004ce5b2958, type: 2}

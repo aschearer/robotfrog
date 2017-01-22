@@ -31,6 +31,8 @@ public class Level : MonoBehaviour {
     public GameObject DecoWallProto;
     public GameObject DecoOneProto;
     public GameObject DecoTwoProto;
+    public GameObject Player1SpotProto;
+    public GameObject Player2SpotProto;
     public Material CommonMain;
     public Material CommonAlt;
 
@@ -384,6 +386,12 @@ public class Level : MonoBehaviour {
                 this.StartCoroutine(this.Fade(prompt));
             }
 
+            var spot = GameObject.Find("Player" + this.players.Count + "Spot");
+            if (spot)
+            {
+                GameObject.Destroy(spot.gameObject);
+            }
+
             if (players.Count == 1)
             {
                 this.StartCoroutine(this.AnimateToPlaying());
@@ -460,6 +468,7 @@ public class Level : MonoBehaviour {
         for(int row=0; row<Map.Count; ++row)
         {
             string tiles = Map[row];
+            string aboveTiles = MapAbove[row];
             numberOfColumns = tiles.Length;
             for(int column=0; column<tiles.Length; ++column)
             {
@@ -493,6 +502,22 @@ public class Level : MonoBehaviour {
                     var tile = this.tiles[this.tiles.Count - 1];
                     tile.Column = column;
                     tile.Row = row;
+                }
+
+                if (Level.levelState == LevelState.None)
+                {
+                    if (aboveTiles[column] == '1')
+                    {
+                        Position.y += 0.7f;
+                        GameObject Tile = Instantiate(this.Player1SpotProto, Position, Rotation, this.Container);
+                        Tile.name = "Player1Spot";
+                    }
+                    else if (aboveTiles[column] == '2')
+                    {
+                        Position.y += 0.6f;
+                        GameObject Tile = Instantiate(this.Player2SpotProto, Position, Rotation, this.Container);
+                        Tile.name = "Player2Spot";
+                    }
                 }
             }
         }
