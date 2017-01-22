@@ -376,6 +376,13 @@ public class Level : MonoBehaviour {
             playerView.Cursor = cursorView;
             playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+
+            var tile = this.GetTileAt(playerView.Column, playerView.Row);
+            if (tile)
+            {
+                tile.TouchingPlayers.Add(playerView);
+            }
+
             this.players.Add(playerView);
             if (players.Count == 2)
             {
