@@ -16,9 +16,9 @@ public class HyperStone : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        RandomOffset = new Vector3(UnityEngine.Random.Range(-0.5f,0.5f),
+        RandomOffset = new Vector3(UnityEngine.Random.Range(-0.2f,0.2f),
             0.0f,
-            UnityEngine.Random.Range(-0.5f,0.5f));
+            UnityEngine.Random.Range(-0.2f,0.2f));
     }
 
     // Update is called once per frame
@@ -34,17 +34,16 @@ public class HyperStone : MonoBehaviour
             GoalPosition = OwnerPlayer.transform.localPosition + Vector3.up*0.5f + RandomOffset; 
         }
         Vector3 Delta = GoalPosition - this.transform.localPosition;
-        if(Delta.sqrMagnitude > 0.25f)
+        if(Delta.sqrMagnitude > 0.01f)
         {
             Delta.Normalize();
             this.transform.localPosition += Delta*Time.deltaTime*2.0f;
             Delta = GoalPosition - this.transform.localPosition;
-            if(OwnerTile && Delta.sqrMagnitude <= 0.25f)
+            if(OwnerTile && Delta.sqrMagnitude <= 0.01f)
             {
                 OwnerTile.OnTouchEnter(this);
             }
         }
-        transform.Rotate(Time.deltaTime, Time.deltaTime*0.6f, 0);
     }
 
 
