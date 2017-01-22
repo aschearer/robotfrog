@@ -69,7 +69,7 @@ public class Missile : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log(string.Format("T:{0}, A:{1}", this.Target, this.transform.localPosition));
+        //Debug.Log(string.Format("T:{0}, A:{1}", this.Target, this.transform.localPosition));
 
         var position = this.transform.localPosition;
         while (position.y > -0.5f)

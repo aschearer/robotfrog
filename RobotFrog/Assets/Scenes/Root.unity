@@ -532,12 +532,12 @@ Prefab:
         type: 2}
       propertyPath: sounds.Array.data[17]
       value: 
-      objectReference: {fileID: 8300000, guid: ef3014191b8b4a14384d294650a5f60c, type: 3}
+      objectReference: {fileID: 8300000, guid: d2253cc04ca038949a38cae6f8f47ba4, type: 3}
     - target: {fileID: 114369035411288422, guid: a490b88b975af8f49b5f947e30e12d64,
         type: 2}
       propertyPath: sounds.Array.data[18]
       value: 
-      objectReference: {fileID: 8300000, guid: b4bb78508632a8045a39cfea0af8ba66, type: 3}
+      objectReference: {fileID: 8300000, guid: e00fc17158bf7e245aef3b22da502f05, type: 3}
     - target: {fileID: 114369035411288422, guid: a490b88b975af8f49b5f947e30e12d64,
         type: 2}
       propertyPath: sounds.Array.data[19]

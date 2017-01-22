@@ -135,7 +135,7 @@ public class Level : MonoBehaviour {
                     {
                         SpawnPlayer(i, i);
                     }
-                    Debug.Log("audio start");
+                    //Debug.Log("audio start");
                     AudioManager.Instance.SetMusic(21);
                     levelState = LevelState.Playing;
                 }
@@ -150,7 +150,7 @@ public class Level : MonoBehaviour {
                             SpawnPlayer(spawnSlot, i);
                             if(CountPlayers() >= PlayerCount)
                             {
-                                Debug.Log("audio start");
+                                //Debug.Log("audio start");
                                 AudioManager.Instance.SetMusic(21);
                                 levelState = LevelState.Playing;
                             }
