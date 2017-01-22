@@ -50,6 +50,8 @@ public class TileFloating : Tile {
 
     private float touchingSinkTimer = 0.8f;
 
+    private int sinkPhaseCount = 4;
+
     void Start ()
     {
         State = DefaultState;
@@ -107,15 +109,23 @@ public class TileFloating : Tile {
                     PlatformHeight++;
                 }
                 timeTouching = 0.0f;
+                sinkPhaseCount = 4;
             }
             if(!IsMoving())
             {
                 if(timeTouching > touchingSinkTimer)
                 {
                     PlatformHeight--;
-                    AudioManager.Instance.PlaySound(22);
+                    
                     HandleHeightChange();
                     timeTouching = 0.01f;
+
+                    if(sinkPhaseCount != 0)
+                    {
+                        AudioManager.Instance.PlaySound(22);
+                        --sinkPhaseCount;
+                    }
+                        
                 }
             }
         }
