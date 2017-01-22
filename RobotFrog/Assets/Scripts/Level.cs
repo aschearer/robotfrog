@@ -57,7 +57,7 @@ public class Level : MonoBehaviour {
 
     public void Start()
     {
-        nextHyperStoneTimeStamp = Time.time + 5.0f;
+        nextHyperStoneTimeStamp = Time.time + 15.0f;
         AudioManager.Instance.SetMusic(20);
         
         SpawnTimer.SetTime(Globals.WarmupTime);

@@ -14,7 +14,7 @@ public class Cursor : MonoBehaviour {
 
     void Start()
     {
-        for(int i=0; i<6; ++i)
+        for(int i=0; i<9; ++i)
         {
             GameObject cube = GameObject.Instantiate(CubeProto, 
                 CubeProto.transform.position, CubeProto.transform.rotation, this.transform);
