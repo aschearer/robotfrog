@@ -113,7 +113,7 @@ public class TileFloating : Tile {
                 if(timeTouching > touchingSinkTimer)
                 {
                     PlatformHeight--;
-                    AudioManager.Instance.PlaySound(17);
+                    AudioManager.Instance.PlaySound(22);
                     HandleHeightChange();
                     timeTouching = 0.01f;
                 }

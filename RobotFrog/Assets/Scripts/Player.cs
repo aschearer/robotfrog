@@ -58,6 +58,8 @@ public class Player : MonoBehaviour {
 
     private bool bPoundingUp = false;
 
+    public bool aimSoundPlaying = true;
+
     private float PoundFloatHeight = 0.0f;
 
     private float PoundUpSpeed = 2.0f;
@@ -204,7 +206,7 @@ public class Player : MonoBehaviour {
             this.PoundWeapon(inputData.SecondaryIsDown, inputData.SecondaryWasDown && !inputData.SecondaryIsDown);
         }
     }
-
+    
     private void FireWeapon(bool isFiring)
     {
         if (isFiring)
@@ -212,14 +214,18 @@ public class Player : MonoBehaviour {
             this.fireTimer += Time.deltaTime * 2;
             this.fireRange = 1 + ((int)this.fireTimer % 4);
             this.Cursor.ShowLine(fireRange);
+            if(!aimSoundPlaying)
+            {
+                AudioManager.Instance.PlaySound(23);
+                aimSoundPlaying = true;
+            }
         }
         else if (this.fireTimer > 0)
         {
-
+            aimSoundPlaying = false;
             this.Cursor.ShowLine(-1);
             var column = (int)Mathf.Round(this.transform.localPosition.x);
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
-
             var heading = this.Heading.ToEulerAngles();
             int distanceTiles = fireRange;
             var distance = new Vector3(
