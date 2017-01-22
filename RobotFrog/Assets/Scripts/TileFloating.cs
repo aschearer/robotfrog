@@ -125,16 +125,10 @@ public class TileFloating : Tile {
         {
             yield return new WaitForSeconds(delay);
         }
-        if(Phase == ShockPhase.Peace)
+        ShockPhase NextPhase = magnitude >= 2 ? ShockPhase.Quake : ShockPhase.Tremor;
+        if((int)Phase <= (int)NextPhase)
         {
-            if(magnitude >= 2)
-            {
-                Phase = ShockPhase.Quake;
-            }
-            else
-            {
-                Phase = ShockPhase.Tremor;
-            }
+            Phase = NextPhase;
             HalfPeriodCount = magnitude*2;
             UpDownState = UpDown.MovingDown;    
         }

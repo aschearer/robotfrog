@@ -56,7 +56,13 @@ public class Player : MonoBehaviour {
 
     private bool isPounding = false;
 
+    private bool bPoundingUp = false;
+
     private float PoundFloatHeight = 0.0f;
+
+    private float PoundUpSpeed = 2.0f;
+    private float PoundDownSpeed = 4.0f;
+    private float PoundPeakHeight = 0.8f;
 
 
     internal Heading Heading { get; private set; }
@@ -85,6 +91,21 @@ public class Player : MonoBehaviour {
         if(canPoundTimeStamp < Time.time)
         {
             canPound = true;
+        }
+        if(isPounding)
+        {
+            if(bPoundingUp)
+            {
+                PoundFloatHeight += Time.deltaTime*PoundUpSpeed;
+                if(PoundFloatHeight > PoundPeakHeight)
+                {
+                    bPoundingUp = false;
+                }
+            }
+            else
+            {
+                PoundFloatHeight -= Time.deltaTime*PoundDownSpeed;
+            }
         }
         if (isFlying != wasFlying)
         {
@@ -169,6 +190,7 @@ public class Player : MonoBehaviour {
             
             if (movementVector.sqrMagnitude > 0.1 &&
                 this.fireTimer <= 0 &&
+                !isPounding &&
                 tileStateIsValidMove(transform.localPosition + movementVector))
             {
                 this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
@@ -334,33 +356,23 @@ public class Player : MonoBehaviour {
         {
             isPounding = true;
             bPoundingUp = true;
+            PoundFloatHeight = 0.5f;
         }
         if(isPounding)
         {
-            if(bPoundingUp)
+            this.Cursor.ShowLine(0);
+            if(!bPoundingUp && PoundFloatHeight < 0.0f)
             {
-                PoundFloatHeight += Time.deltaTime*0.4f;
-                if(PoundFloatHeight > 1.0f);
-                {
-                    bPoundingUp = false;
-                }
+                PoundFloatHeight = 0.0f;
+
+                var tile = this.Level.GetTileAt(Column, Row);
+                int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
+                this.Level.ExplodeAt(tile, 1, Magnitude, false);
+                canPound = false;
+                canPoundTimeStamp = Time.time + shotDelay;
+                this.Cursor.ShowLine(-1);
+                isPounding = false;
             }
-            else
-            {
-                PoundFloatHeight -= Time.deltaTime*0.4f;
-                if(PoundFloatHeight < 0.0f)
-                {
-                    PoundFloatHeight = 0.0f;
-
-                    var tile = this.Level.GetTileAt(Column, Row);
-                    int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
-                    this.Level.ExplodeAt(tile, 1, Magnitude, false);
-                    canPound = false;
-                    canPoundTimeStamp = Time.time + shotDelay;
-                }
-            }
-
-
             Vector3 nextPosition = this.transform.localPosition;
             nextPosition.y = this.playerHeight + this.tileHeight + this.PoundFloatHeight;
             this.transform.localPosition = nextPosition;
