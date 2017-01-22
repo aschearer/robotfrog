@@ -734,6 +734,16 @@ Prefab:
       propertyPath: sounds.Array.data[24]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 20661417777495210, guid: a490b88b975af8f49b5f947e30e12d64,
+        type: 2}
+      propertyPath: m_BackGroundColor.g
+      value: 0.6745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 20661417777495210, guid: a490b88b975af8f49b5f947e30e12d64,
+        type: 2}
+      propertyPath: m_BackGroundColor.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a490b88b975af8f49b5f947e30e12d64, type: 2}
   m_IsPrefabParent: 0
