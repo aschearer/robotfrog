@@ -35,19 +35,27 @@ public class Missile : MonoBehaviour
         var thetaSpeed = Mathf.PI / this.lifespan;
         var logicalPosition = this.transform.localPosition;
         logicalPosition.y = 0;
-        var movementSpeed = (this.Target - this.transform.localPosition);
+        var movementSpeed = (this.Target - this.transform.localPosition) / this.lifespan;
         var basePosition = this.transform.localPosition;
         for (float t = 0; t < this.lifespan; t += Time.deltaTime)
         {
             var y = Mathf.Sin(t * thetaSpeed);
-            var position = t * movementSpeed;
-            position.y = y * this.arcHeight;
-            this.transform.localPosition = basePosition + position;
+            var delta = t * movementSpeed;
+            delta.y = y * this.arcHeight;
+            this.transform.localPosition = basePosition + delta;
 
             yield return null;
         }
 
-        this.transform.localPosition = this.Target;
+        Debug.Log(string.Format("T:{0}, A:{1}", this.Target, this.transform.localPosition));
+
+        var position = this.transform.localPosition;
+        while (position.y > -0.5f)
+        {
+            position.y -= 2f * Time.deltaTime;
+            this.transform.localPosition = position;
+            yield return null;
+        }
 
         this.ExplodeTiles();
         this.CommitSuicide();
