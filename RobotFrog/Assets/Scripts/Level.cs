@@ -13,8 +13,10 @@ public class Level : MonoBehaviour {
     public GameObject TileWater;
     public GameObject TileBox;
     public GameObject TileRock;
-    public GameObject Player;
+    public GameObject PlayerMainProto;
+    public GameObject PlayerAltProto;
     public GameObject CursorProto;
+    public GameObject ZapExplodeProto;
 
     public Transform Container;
 
@@ -249,16 +251,17 @@ public class Level : MonoBehaviour {
                     Tile.name = "Tile" + row + "," + column;
                     this.tiles.Add(Tile.GetComponent<Tile>());
 
-                    Prefab = Player;
                     ControllerId controllerId = ControllerId.KeyboardLeft;
                     switch (tiles[column])
                     {
                         case '1':
                             name = "Player1";
+                            Prefab = PlayerMainProto;
                             Tint = Color.red;
                             break;
                         case '2':
                             name = "Player2";
+                            Prefab = PlayerAltProto;
                             controllerId = ControllerId.KeyboardRight;
                             Tint = Color.blue;
                             break;

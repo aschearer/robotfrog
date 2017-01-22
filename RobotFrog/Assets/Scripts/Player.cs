@@ -14,9 +14,6 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private Missile MissilePrefab;
 
-    [SerializeField]
-    private Rigidbody myBody;
-
     private string horizontalAxisName;
 
     private string verticalAxisName;
@@ -88,7 +85,7 @@ public class Player : MonoBehaviour {
 
         this.UpdateHeading(horizontal, vertical);
 
-        this.myBody.MovePosition(this.transform.position + movementVector);
+        this.transform.position = this.transform.position + movementVector;
 
         this.FireWeapon();
 
