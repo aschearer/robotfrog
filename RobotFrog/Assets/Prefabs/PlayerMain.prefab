@@ -293,7 +293,7 @@ MonoBehaviour:
     type: 2}
   movementTime: 0.3
   arcHeight: 0.4
-  shotDelay: 1
+  shotDelay: 0.25
   flyingModel: {fileID: 1228804186426572}
   sittingModel: {fileID: 1112988692890846}
   isFlying: 0
