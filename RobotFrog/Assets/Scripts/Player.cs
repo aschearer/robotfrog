@@ -210,12 +210,10 @@ public class Player : MonoBehaviour {
     bool moveValid(string attemptedMove)
     {
         Vector3 tempPosition = transform.localPosition;
-        Debug.Log(tempPosition + "trans pos" );
         if(attemptedMove.CompareTo("up") == 0)
         {
             ++tempPosition.z;
             return tileStateIsValidMove(tempPosition);
-            
         }
         else if (attemptedMove.CompareTo("down") == 0)
         {
@@ -229,32 +227,35 @@ public class Player : MonoBehaviour {
         }
         else if (attemptedMove.CompareTo("left") == 0)
         {
-            --tempPosition.y;
+            --tempPosition.x;
             return tileStateIsValidMove(tempPosition);
         }
 
         return false;
     }
 
-    bool tileStateIsValidMove(Vector3 tempPosition)
+    bool tileStateIsValidMove(Vector3 nextPosition)
     {
-        Debug.Log(tempPosition + " << total position     (int)tempPosition.x >> " + (int)tempPosition.x + "    (int)tempPosition.z >>>>" + Math.Abs((int)tempPosition.z));
+        int column = (int)Mathf.Round(nextPosition.x);
+        int row = (int)Mathf.Round(-nextPosition.z);
+        Debug.Log(string.Format("Looked at: {0},{1}", column, row));
+        var tile = Level.GetTileAt(column, row);
+        if (tile == null)
+        {
+            return false;
+        }
 
-        if(Level.GetTileAt((int)tempPosition.x, Math.Abs((int)tempPosition.z)) == null)
+        Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
+
+        TileState state = tile.State;
+        switch (state)
         {
-            Debug.Log("false");
-            return false;
-        }
-        Debug.Log("it made it");
-        TileState state = Level.GetTileAt((int)tempPosition.x, Math.Abs((int)tempPosition.z)).State;
-        Debug.Log(state + "");
-        if( state == TileState.SinkingPad || state == TileState.Rock || state == TileState.FloatingBox)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
+            case TileState.SinkingPad:
+            case TileState.FloatingBox:
+            case TileState.Rock:
+                return true;
+            default:
+                return false;
         }
     }
 }

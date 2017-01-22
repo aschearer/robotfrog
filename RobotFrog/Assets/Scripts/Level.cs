@@ -235,14 +235,7 @@ public class Level : MonoBehaviour {
                 {
                     GameObject Tile = Instantiate(Prefab, Position, Rotation, this.Container);
                     Tile.name = name + row + "," + column;
-                    if (Prefab == TileFloating || Prefab == TileRock)
-                    {
-                        this.tiles.Add(Tile.GetComponent<Tile>());
-                    }
-                    else
-                    {
-                        this.tiles.Add(null);
-                    }
+                    this.tiles.Add(Tile.GetComponent<Tile>());
                 }
                 else
                 {
