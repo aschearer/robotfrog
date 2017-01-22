@@ -140,7 +140,7 @@ public class Player : MonoBehaviour {
         isFlying = false;
         var nextTile = this.Level.GetTileAt(Column, Row);
         nextTile.OnTouchEnter(this);
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.15f);
         canJump = true;
     }
     public void HandleInput(InputData inputData)
