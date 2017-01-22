@@ -330,32 +330,40 @@ public class Player : MonoBehaviour {
 
     void PoundWeapon(bool bIsDown, bool bIsReleased)
     {
-        if(bIsReleased && isPounding)
-        {
-
-            isPounding = false;
-            var tile = this.Level.GetTileAt(Column, Row);
-            int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
-            this.Level.ExplodeAt(tile, 1, Magnitude, false);
-            canPound = false;
-            canPoundTimeStamp = Time.time + shotDelay;
-
-
-
-            Vector3 nextPosition = this.transform.localPosition;
-            nextPosition.y = this.playerHeight + this.tileHeight;
-            this.transform.localPosition = nextPosition;
-            PoundFloatHeight = 0.0f;
-        }
-        if(bIsDown && canPound)
+        if(bIsDown && !isPounding && canPound)
         {
             isPounding = true;
-            PoundFloatHeight += Time.deltaTime*0.2f;
+            bPoundingUp = true;
+        }
+        if(isPounding)
+        {
+            if(bPoundingUp)
+            {
+                PoundFloatHeight += Time.deltaTime*0.4f;
+                if(PoundFloatHeight > 1.0f);
+                {
+                    bPoundingUp = false;
+                }
+            }
+            else
+            {
+                PoundFloatHeight -= Time.deltaTime*0.4f;
+                if(PoundFloatHeight < 0.0f)
+                {
+                    PoundFloatHeight = 0.0f;
+
+                    var tile = this.Level.GetTileAt(Column, Row);
+                    int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
+                    this.Level.ExplodeAt(tile, 1, Magnitude, false);
+                    canPound = false;
+                    canPoundTimeStamp = Time.time + shotDelay;
+                }
+            }
 
 
             Vector3 nextPosition = this.transform.localPosition;
             nextPosition.y = this.playerHeight + this.tileHeight + this.PoundFloatHeight;
             this.transform.localPosition = nextPosition;
-        }
+        }       
     }
 }
