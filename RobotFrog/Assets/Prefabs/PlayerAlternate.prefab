@@ -195,8 +195,10 @@ MonoBehaviour:
     type: 2}
   movementTime: 0.3
   arcHeight: 0.4
-  shotDelay: 0.25
+  shotDelay: 0.8
   flyingModel: {fileID: 1228804186426572}
   sittingModel: {fileID: 1112988692890846}
   playerHeight: 1
   isFlying: 0
+  aimSoundPlaying: 1
+  Strength: 0
