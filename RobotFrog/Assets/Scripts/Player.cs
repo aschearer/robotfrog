@@ -51,16 +51,34 @@ public class Player : MonoBehaviour {
     
     void Update ()
     {
-        float horizontal = Input.GetAxis(this.horizontalAxisName);
-        float vertical = Input.GetAxis(this.verticalAxisName);
-
+        //if the check passes IE. no obstacles player moves
+        float horizontal = 0;
+        float vertical = 0;
         Vector3 movementVector = Vector3.zero;
-        movementVector += this.horizontalMovementSpeed * horizontal;
-        movementVector += this.verticalMovementSpeed * vertical;
+        if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0 && moveValid("right") == true)
+        {
+            ++horizontal;
+        }
+        else if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) < 0 && moveValid("left") == true)
+        {
+            --horizontal;
+        }
+        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) > 0 && moveValid("up") == true)
+        {
+            ++vertical;
+        }
+        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) < 0 && moveValid("down") == true)
+        {
+            --vertical;
+        }
+        //Debug.Log(Input.GetAxis(this.horizontalAxisName) + " << horizontal vertical >> " + Input.GetAxis(this.verticalAxisName));
+        
+        movementVector.x += horizontal;
+        movementVector.z += vertical;
 
         this.UpdateHeading(horizontal, vertical);
-        
-        this.myBody.MovePosition(this.transform.position + (30 * movementVector * Time.deltaTime));
+
+        this.myBody.MovePosition(this.transform.position + movementVector);
 
         this.FireWeapon();
 
@@ -158,5 +176,56 @@ public class Player : MonoBehaviour {
     {
         yield return new WaitForSeconds(3.0f);
         this.transform.localScale = Vector3.one;
+    }
+
+    bool moveValid(string attemptedMove)
+    {
+        Vector3 tempPosition = transform.localPosition;
+        Debug.Log(tempPosition + "trans pos" );
+        if(attemptedMove.CompareTo("up") == 0)
+        {
+            ++tempPosition.z;
+            return tileStateIsValidMove(tempPosition);
+            
+        }
+        else if (attemptedMove.CompareTo("down") == 0)
+        {
+            --tempPosition.z;
+            return tileStateIsValidMove(tempPosition);
+        }
+        else if (attemptedMove.CompareTo("right") == 0)
+        {
+            ++tempPosition.x;
+            return tileStateIsValidMove(tempPosition);
+        }
+        else if (attemptedMove.CompareTo("left") == 0)
+        {
+            --tempPosition.y;
+            return tileStateIsValidMove(tempPosition);
+        }
+
+        return false;
+    }
+
+    bool tileStateIsValidMove(Vector3 tempPosition)
+    {
+        Debug.Log(tempPosition + " << total position     (int)tempPosition.x >> " + (int)tempPosition.x + "    (int)tempPosition.z >>>>" + Math.Abs((int)tempPosition.z));
+
+        if(Level.GetTileAt((int)tempPosition.x, Math.Abs((int)tempPosition.z)) == null)
+        {
+            Debug.Log("false");
+            return false;
+        }
+        Debug.Log("it made it");
+        TileState state = Level.GetTileAt((int)tempPosition.x, Math.Abs((int)tempPosition.z)).State;
+        Debug.Log(state + "");
+        if( state == TileState.SinkingPad || state == TileState.Rock || state == TileState.FloatingBox)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
