@@ -148,7 +148,8 @@ public class Level : MonoBehaviour {
                             // temp, launch the game when we hit two   
                             if(PlayerCount() >= 2)
                             {
-                                SpawnTimer.Tick(99.0f);
+
+                                levelState = LevelState.Playing;
                             }
                         }
                         else

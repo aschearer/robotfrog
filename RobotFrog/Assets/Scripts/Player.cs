@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
 
     private bool wasFlying;
 
-    private ManualTimer moveTimer = new ManualTimer();
+    private ManualTimer landTimer = new ManualTimer();
 
     internal Heading Heading { get; private set; }
 
@@ -51,12 +51,16 @@ public class Player : MonoBehaviour {
     public int Row { get; internal set; }
 
     void Start () {
-        moveTimer.SetTime(0.5f);
-        moveTimer.IsLooping = false;
+        landTimer.SetTime(0.45f);
+        landTimer.IsLooping = false;
     }
     
     void Update ()
     {
+        if(landTimer.IsTicking())
+        {
+            landTimer.Tick(Time.deltaTime);
+        }
         if (isFlying != wasFlying)
         {
             wasFlying = isFlying;
@@ -66,7 +70,7 @@ public class Player : MonoBehaviour {
     }
     IEnumerator jumpAnimation(Vector3 targetLocation)
     {
-        Debug.Log("moving to " + targetLocation);
+        //Debug.Log("moving to " + targetLocation);
 
         var thetaSpeed = Mathf.PI / this.movementTime;
         var distanceToTravel = (targetLocation - this.transform.localPosition);
@@ -78,11 +82,12 @@ public class Player : MonoBehaviour {
             var position = t * movementSpeed;
             position.y = y * arcHeight;
             this.transform.localPosition = basePosition + position;
-            Debug.Log(this.transform.localPosition + "in loop");
+            //Debug.Log(this.transform.localPosition + "in loop");
             yield return null;
         }
 
         this.transform.localPosition = targetLocation;
+        landTimer.Reset();
         isFlying = false;
     }
     public void HandleInput(InputData inputData)
@@ -99,15 +104,21 @@ public class Player : MonoBehaviour {
         }
         if (isFlying == false)
         {
-
-            Vector3 movementVector = Vector3.zero;
-
-            movementVector.x += inputData.HorizontalAxis;
-            movementVector.z += inputData.VerticalAxis;
-            if (tileStateIsValidMove(transform.localPosition + movementVector) && movementVector.sqrMagnitude > 0.1)
+            if(landTimer.IsTicking())
             {
-                isFlying = true;
-                this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
+                
+            }
+            else
+            {
+                Vector3 movementVector = Vector3.zero;
+
+                movementVector.x += inputData.HorizontalAxis;
+                movementVector.z += inputData.VerticalAxis;
+                if (tileStateIsValidMove(transform.localPosition + movementVector) && movementVector.sqrMagnitude > 0.1)
+                {
+                    isFlying = true;
+                    this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
+                }
             }
         }
         this.FireWeapon(inputData.PrimaryIsDown);
@@ -209,14 +220,14 @@ public class Player : MonoBehaviour {
     {
         int column = (int)Mathf.Round(nextPosition.x);
         int row = (int)Mathf.Round(-nextPosition.z);
-        Debug.Log(string.Format("Looked at: {0},{1}", column, row));
+        //Debug.Log(string.Format("Looked at: {0},{1}", column, row));
         var tile = Level.GetTileAt(column, row);
         if (tile == null)
         {
             return false;
         }
 
-        Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
+        //Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
 
         bool isValidMove = false;
         TileState state = tile.State;

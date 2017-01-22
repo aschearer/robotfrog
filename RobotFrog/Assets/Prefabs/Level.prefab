@@ -97,8 +97,8 @@ MonoBehaviour:
     type: 2}
   SplashExplodeProto: {fileID: 1199207680879562, guid: f1d91e99226d3f4438d67661bafca764,
     type: 2}
-  CommonMain: {fileID: 0}
-  CommonAlt: {fileID: 0}
+  CommonMain: {fileID: 2100000, guid: affd0fd84339f724993cb2a93dae8910, type: 2}
+  CommonAlt: {fileID: 2100000, guid: 5101c71647ea126469c43004ce5b2958, type: 2}
   Container: {fileID: 4791867351989844}
   Map: []
   MapAbove: []
