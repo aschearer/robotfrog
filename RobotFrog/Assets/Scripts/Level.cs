@@ -50,6 +50,7 @@ public class Level : MonoBehaviour {
 
     public void Start()
     {
+        AudioManager.Instance.SetMusic(20);
         SpawnTimer.SetTime(Globals.WarmupTime);
         for(int i=0; i<6; ++i)
         {
@@ -134,6 +135,8 @@ public class Level : MonoBehaviour {
                     {
                         SpawnPlayer(i, i);
                     }
+                    Debug.Log("audio start");
+                    AudioManager.Instance.SetMusic(21);
                     levelState = LevelState.Playing;
                 }
                 for(int i=0; i<6; ++i)
@@ -142,10 +145,13 @@ public class Level : MonoBehaviour {
                     {
                         if(!controllers[i].Pawn)
                         {
+                            AudioManager.Instance.PlaySound(18);
                             int spawnSlot = CountPlayers();
                             SpawnPlayer(spawnSlot, i);
                             if(CountPlayers() >= PlayerCount)
                             {
+                                Debug.Log("audio start");
+                                AudioManager.Instance.SetMusic(21);
                                 levelState = LevelState.Playing;
                             }
                         }

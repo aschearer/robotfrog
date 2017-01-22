@@ -16,6 +16,17 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void SetMusic(int soundIndex)
+    {
+        if(source.clip != sounds[soundIndex])
+        {
+            source.Stop();
+            source.clip = sounds[soundIndex];
+            source.Play();
+        }
+        
+    }
+
     // Use this for initialization
     void Start()
     {

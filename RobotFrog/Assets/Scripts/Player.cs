@@ -78,7 +78,6 @@ public class Player : MonoBehaviour {
     public int Row { get; internal set; }
 
     void Start () {
-
         canPound = false;
         canPoundTimeStamp = Time.time + 0.25f;
         canShoot = false;
@@ -298,6 +297,7 @@ public class Player : MonoBehaviour {
     {
         Level.MakeElectricity(this.transform.position);
         // die
+        AudioManager.Instance.PlaySound(16);
         GameObject.Destroy(this.gameObject);
     }
 
@@ -354,6 +354,7 @@ public class Player : MonoBehaviour {
     {
         if(bIsDown && !isPounding && canPound)
         {
+            AudioManager.Instance.PlaySound(19);
             isPounding = true;
             bPoundingUp = true;
             PoundFloatHeight = 0.5f;
