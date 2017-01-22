@@ -65,14 +65,21 @@ public class Level : MonoBehaviour {
             ////Map.Add("X________X");
             ////Map.Add("XXXXXXXXXX");
 
+            ////// 10x7 with columns
+            ////Map.Add("XXXXXXXXXX");
+            ////Map.Add("X_______WX");
+            ////Map.Add("X_1__W___X");
+            ////Map.Add("X___RB___X");
+            ////Map.Add("X___W__2_X");
+            ////Map.Add("XW_______X");
+            ////Map.Add("XXXXXXXXXX");
+
             // 10x7 with columns
-            Map.Add("XXXXXXXXXX");
-            Map.Add("X_______WX");
-            Map.Add("X_1__W___X");
-            Map.Add("X___RB___X");
-            Map.Add("X___W__2_X");
-            Map.Add("XW_______X");
-            Map.Add("XXXXXXXXXX");
+            Map.Add("_______W");
+            Map.Add("_1__W___");
+            Map.Add("___RB___");
+            Map.Add("___W__2_");
+            Map.Add("W_______");
         }
         MakeLevel(Map);
     }
