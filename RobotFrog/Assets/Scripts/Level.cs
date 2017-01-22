@@ -324,8 +324,12 @@ public class Level : MonoBehaviour {
             playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
 
             var objectName = spawnSlot == 0 ? "RedPlayer" : "BluePlayer";
-            var prompt = GameObject.Find(objectName).GetComponent<CanvasGroup>();
-            this.StartCoroutine(this.Fade(prompt));
+            var promptGameObject = GameObject.Find(objectName);
+            if (promptGameObject != null)
+            {
+                var prompt = promptGameObject.GetComponent<CanvasGroup>();
+                this.StartCoroutine(this.Fade(prompt));
+            }
         }
     }
 

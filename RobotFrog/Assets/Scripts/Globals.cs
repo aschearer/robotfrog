@@ -5,5 +5,5 @@ using System.Collections;
 
 public class Globals : MonoBehaviour {
 
-    public static float WarmupTime = 5.0f;
+    public static float WarmupTime = 0f;
 }

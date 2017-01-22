@@ -9,6 +9,8 @@ public class ControllerHuman : Controller {
     private int DeviceId;
     private string horizontalAxisName;
     private string verticalAxisName;
+    private bool horizontalIsDown;
+    private bool verticalIsDown;
 
     public void AssignDeviceId(int id)
     {
@@ -21,8 +23,47 @@ public class ControllerHuman : Controller {
     {
         inputData.PrimaryWasDown = inputData.PrimaryIsDown;
         inputData.SecondaryWasDown = inputData.SecondaryIsDown;
-        inputData.HorizontalAxis = (int)Mathf.Round(Input.GetAxis(this.horizontalAxisName));
-        inputData.VerticalAxis = (int)Mathf.Round(Input.GetAxis(this.verticalAxisName));
+
+        var threshold = 0.9f;
+        var horizontal = Input.GetAxis(this.horizontalAxisName);
+        if (Mathf.Abs(horizontal) < threshold)
+        {
+            this.horizontalIsDown = false;
+            inputData.HorizontalAxis = 0;
+        }
+        else if (!this.horizontalIsDown)
+        {
+            this.horizontalIsDown = true;
+            inputData.HorizontalAxis = (int)Mathf.Sign(horizontal);
+        }
+        else
+        {
+            inputData.HorizontalAxis = 0;
+        }
+
+        var vertical = Input.GetAxis(this.verticalAxisName);
+        if (this.horizontalIsDown || Mathf.Abs(vertical) < threshold)
+        {
+            this.verticalIsDown = false;
+            inputData.VerticalAxis = 0;
+        }
+        else if (!this.verticalIsDown)
+        {
+            this.verticalIsDown = true;
+            inputData.VerticalAxis = (int)Mathf.Sign(vertical);
+        }
+        else
+        {
+            inputData.VerticalAxis = 0;
+        }
+
+        ////inputData.HorizontalAxis = Input.GetButtonDown(this.horizontalAxisName)
+        ////    ? (int)Mathf.Sign(Input.GetAxis(this.horizontalAxisName))
+        ////    : 0;
+        ////inputData.VerticalAxis = Input.GetButtonDown(this.verticalAxisName)
+        ////    ? (int)Mathf.Sign(Input.GetAxis(this.verticalAxisName))
+        ////    : 0;
+
         inputData.PrimaryIsDown = Input.GetKey(GetPrimaryButton());
         inputData.SecondaryIsDown = Input.GetKey(GetSecondaryButton());
         base.SendInput();
