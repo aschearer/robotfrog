@@ -377,6 +377,10 @@ public class Level : MonoBehaviour {
             playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             this.players.Add(playerView);
+            if (players.Count == 2)
+            {
+                AudioManager.Instance.PlaySound(18);
+            }
 
             var objectName = spawnSlot == 0 ? "RedPlayer" : "BluePlayer";
             var promptGameObject = GameObject.Find(objectName);
