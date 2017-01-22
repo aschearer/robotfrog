@@ -25,6 +25,14 @@ public class ControllerHuman : Controller {
         inputData.SecondaryWasDown = inputData.SecondaryIsDown;
 
         var threshold = 0.9f;
+        switch (this.DeviceId)
+        {
+            case 0:
+            case 1:
+                threshold = 0.1f;
+                break;
+        }
+
         var horizontal = Input.GetAxis(this.horizontalAxisName);
         if (Mathf.Abs(horizontal) < threshold)
         {
@@ -56,13 +64,6 @@ public class ControllerHuman : Controller {
         {
             inputData.VerticalAxis = 0;
         }
-
-        ////inputData.HorizontalAxis = Input.GetButtonDown(this.horizontalAxisName)
-        ////    ? (int)Mathf.Sign(Input.GetAxis(this.horizontalAxisName))
-        ////    : 0;
-        ////inputData.VerticalAxis = Input.GetButtonDown(this.verticalAxisName)
-        ////    ? (int)Mathf.Sign(Input.GetAxis(this.verticalAxisName))
-        ////    : 0;
 
         inputData.PrimaryIsDown = Input.GetKey(GetPrimaryButton());
         inputData.SecondaryIsDown = Input.GetKey(GetSecondaryButton());
