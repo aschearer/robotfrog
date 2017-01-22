@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance { get; private set; }
+
     public AudioClip[] sounds;
     public AudioSource source;
 
@@ -14,6 +16,7 @@ public class AudioManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        AudioManager.Instance = this;
         source = gameObject.GetComponent<AudioSource>();
     }
 

@@ -147,7 +147,7 @@ public class Player : MonoBehaviour {
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
                     System.Random r = new System.Random();
                     int rInt = r.Next(0, 13);
-                    //GameObject.Find("Main Camera").GetComponent<AudioManager>().PlaySound(rInt);
+                    AudioManager.Instance.PlaySound(rInt);
                 }
             }
             
