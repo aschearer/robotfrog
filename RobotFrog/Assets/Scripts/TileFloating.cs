@@ -44,7 +44,7 @@ public class TileFloating : Tile {
 
     private float WaterOffset;
     private float PlatformOffset;
-    private float TotalOffset;
+    private float FlippedOffset;
 
     private float timeTouching = 0.0f;
 
@@ -113,7 +113,7 @@ public class TileFloating : Tile {
                 if(timeTouching > touchingSinkTimer)
                 {
                     PlatformHeight--;
-                    AudioManager.Instance.PlaySound(17);
+                    AudioManager.Instance.PlaySound(22);
                     HandleHeightChange();
                     timeTouching = 0.01f;
                 }
@@ -158,7 +158,7 @@ public class TileFloating : Tile {
                 if(Platform)
                 {
                     Platform.transform.localRotation =  Quaternion.Euler(IsFlipped ? 180f: 0f, 0f, 0f);
-                    Platform.transform.localPosition = Vector3.up * (IsFlipped ? 0.95f : 0.01f);
+                    FlippedOffset = IsFlipped ? 0.95f : 0.01f;
                 }
             }
         }
@@ -244,7 +244,7 @@ public class TileFloating : Tile {
             }
             else
             {
-                Platform.transform.localPosition = Vector3.up*PlatformOffset;
+                Platform.transform.localPosition = Vector3.up*(PlatformOffset+FlippedOffset);
             }
         }
 

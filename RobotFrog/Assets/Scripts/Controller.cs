@@ -17,7 +17,7 @@ public class Controller : MonoBehaviour {
 
     public Player Pawn;
 
-    public bool isInTheGame = false;
+    public int slotInTheGame = -1;
 
     public InputData inputData;
 

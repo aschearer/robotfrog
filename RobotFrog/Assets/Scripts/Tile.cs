@@ -16,6 +16,7 @@ public class Tile : MonoBehaviour {
     
 
     public List<Player> TouchingPlayers; // this could be only one player
+    public List<HyperStone> TouchingHyperstones; // this could be only one player
 
     internal int Column;
 
@@ -23,14 +24,37 @@ public class Tile : MonoBehaviour {
 
     public TileState State;
 
+    public float TotalOffset;
+
     void Start()
     {
+    }
+
+    public void OnTouchEnter(HyperStone OtherStone)
+    {
+        if(TouchingPlayers.Count > 0)
+        {
+            OtherStone.OwnerTile = null;
+            OtherStone.OwnerPlayer = TouchingPlayers[0];
+            TouchingPlayers[0].Strength++;
+        }
+        else if(!TouchingHyperstones.Contains(OtherStone))
+        {
+            TouchingHyperstones.Add(OtherStone);
+        }   
     }
 
     public void OnTouchEnter(Player OtherPlayer)
     {
         if(!TouchingPlayers.Contains(OtherPlayer))
         {
+            foreach(HyperStone stone in TouchingHyperstones)
+            {
+                stone.OwnerTile = null;
+                stone.OwnerPlayer = OtherPlayer;
+                OtherPlayer.Strength++;
+            }
+            TouchingHyperstones.Clear();
             TouchingPlayers.Add(OtherPlayer);
             OnPlayerTouchingAdd(OtherPlayer);
         }

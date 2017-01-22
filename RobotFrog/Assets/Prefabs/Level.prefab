@@ -106,6 +106,10 @@ MonoBehaviour:
     type: 2}
   Player1SpotProto: {fileID: 1988962737190274, guid: 65402a6539aed784694bf0c4f195a4fb,
     type: 2}
+  Player2SpotProto: {fileID: 1644596807312024, guid: aa53f7c5c4fd3f94e8151893af60c77d,
+    type: 2}
+  HyperStoneProto: {fileID: 1462448348924664, guid: 1ed6019a26115324aaec13d9a3bc9a61,
+    type: 2}
   CommonMain: {fileID: 2100000, guid: affd0fd84339f724993cb2a93dae8910, type: 2}
   CommonAlt: {fileID: 2100000, guid: 5101c71647ea126469c43004ce5b2958, type: 2}
   Container: {fileID: 4791867351989844}
