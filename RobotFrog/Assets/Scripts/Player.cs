@@ -173,7 +173,7 @@ public class Player : MonoBehaviour {
             {
                 this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
                 System.Random r = new System.Random();
-                int rInt = r.Next(0, 13);
+                int rInt = r.Next(13,15);
                 AudioManager.Instance.PlaySound(rInt);
             }
         }

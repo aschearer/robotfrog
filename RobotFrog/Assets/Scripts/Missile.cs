@@ -32,6 +32,10 @@ public class Missile : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        System.Random r = new System.Random();
+        int rInt = r.Next(0, 12);
+        AudioManager.Instance.PlaySound(rInt);
+        AudioManager.Instance.PlaySound(17);
         this.StartCoroutine(this.Explode());
     }
 
