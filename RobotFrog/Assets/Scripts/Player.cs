@@ -85,7 +85,10 @@ public class Player : MonoBehaviour {
 
         this.UpdateHeading(horizontal, vertical);
 
-        this.transform.position = this.transform.position + movementVector;
+        if (this.fireTimer <= 0)
+        {
+            this.transform.position = this.transform.position + movementVector;
+        }
 
         this.FireWeapon();
 
