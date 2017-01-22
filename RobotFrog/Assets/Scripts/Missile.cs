@@ -68,8 +68,8 @@ public class Missile : MonoBehaviour
 
     private void ExplodeTiles()
     {
-        var column = (int)(this.transform.localPosition.x);
-        var row = (int)(-this.transform.localPosition.z);
+        var column = (int)Mathf.Round(this.transform.localPosition.x);
+        var row = (int)Mathf.Round(-this.transform.localPosition.z);
         var tile = this.Level.GetTileAt(column, row);
 
         if (tile)
