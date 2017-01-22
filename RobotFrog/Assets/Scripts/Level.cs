@@ -30,6 +30,9 @@ public class Level : MonoBehaviour {
     public GameObject CursorProto;
     public GameObject ZapExplodeProto;
     public GameObject SplashExplodeProto;
+    public GameObject DecoWallProto;
+    public GameObject DecoOneProto;
+    public GameObject DecoTwoProto;
     public Material CommonMain;
     public Material CommonAlt;
 
@@ -415,6 +418,31 @@ public class Level : MonoBehaviour {
                     tile.Column = column;
                     tile.Row = row;
                 }
+            }
+        }
+
+        for(int row=-1; row<=Map.Count; ++row)
+        {
+            for(int column=-1; column<=numberOfColumns; ++column)
+            {
+                Vector3 Position = this.transform.localPosition + new Vector3(column*TileRadius, 0.5f, -row*TileRadius);
+                Quaternion Rotation = Quaternion.identity;
+                Position.x -= 2;
+                if(row == -1 || row == Map.Count)
+                {
+                    GameObject DecoWall = Instantiate(DecoWallProto, Position, Rotation, this.Container);
+                    DecoWall.name = "DecoWall" + row + "," + column;
+                }
+                Position.y -= 1;
+                if(UnityEngine.Random.value > 0.5f)
+                {
+                    GameObject DecoOne = Instantiate(DecoOneProto, Position, Rotation, this.Container);
+                    DecoOne.name = "DecoOne" + row + "," + column;
+
+                    Position.y -= 1;
+                }
+                GameObject DecoTwo = Instantiate(DecoTwoProto, Position, Rotation, this.Container);
+                DecoTwo.name = "DecoTwo" + row + "," + column;
             }
         }
 

@@ -77,10 +77,6 @@ public class Player : MonoBehaviour {
 
         if(canShootTimeStamp < Time.time)
         {
-<<<<<<< HEAD
-            //Debug.Log("can shoot");
-=======
->>>>>>> origin/master
             canShoot = true;
         }
 
@@ -146,7 +142,7 @@ public class Player : MonoBehaviour {
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
                     System.Random r = new System.Random();
                     int rInt = r.Next(0, 13);
-                    GameObject.Find("Main Camera").GetComponent<AudioManager>().PlaySound(rInt);
+                    //GameObject.Find("Main Camera").GetComponent<AudioManager>().PlaySound(rInt);
                 }
             }
             
