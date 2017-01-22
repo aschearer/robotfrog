@@ -213,7 +213,6 @@ MonoBehaviour:
   flyingModel: {fileID: 1228804186426572}
   sittingModel: {fileID: 1112988692890846}
   isFlying: 0
-  playerId: 0
 --- !u!135 &135401508254500110
 SphereCollider:
   m_ObjectHideFlags: 1

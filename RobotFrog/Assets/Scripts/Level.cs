@@ -104,15 +104,15 @@ public class Level : MonoBehaviour {
                 levelState = LevelState.WaitingToSpawn;
                 break;
             case LevelState.WaitingToSpawn:
-                if(SpawnTimer.Tick(Time.deltaTime))
-                {
-                    int spawnSlot = PlayerCount();
-                    for(int i=spawnSlot; i<MinPlayers; ++i)
-                    {
-                        SpawnPlayer(i, i);
-                    }
-                    levelState = LevelState.Playing;
-                }
+                ////if(SpawnTimer.Tick(Time.deltaTime))
+                ////{
+                ////    int spawnSlot = PlayerCount();
+                ////    for(int i=spawnSlot; i<MinPlayers; ++i)
+                ////    {
+                ////        SpawnPlayer(i, i);
+                ////    }
+                ////    levelState = LevelState.Playing;
+                ////}
                 for(int i=0; i<6; ++i)
                 {
                     if(controllers[i].inputData.PrimaryIsDown)
@@ -322,8 +322,23 @@ public class Level : MonoBehaviour {
             playerView.Cursor = cursorView;
             playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
-            
+
+            var objectName = spawnSlot == 0 ? "RedPlayer" : "BluePlayer";
+            var prompt = GameObject.Find(objectName).GetComponent<CanvasGroup>();
+            this.StartCoroutine(this.Fade(prompt));
         }
+    }
+
+    private IEnumerator Fade(CanvasGroup prompt)
+    {
+        for (float t = 1; t >= 0; t -= Time.deltaTime * 4)
+        {
+            prompt.alpha = t;
+
+            yield return null;
+        }
+
+        GameObject.Destroy(prompt.gameObject);
     }
 
     internal Player GetPlayerAt(int column, int row)
