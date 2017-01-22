@@ -38,6 +38,8 @@ public class Player : MonoBehaviour {
     internal Color Tint { get; set; }
 
     internal Cursor Cursor { get; set; }
+    public int Column { get; internal set; }
+    public int Row { get; internal set; }
 
     void Start () {
         moveTimer.SetTime(1.0f);
@@ -82,6 +84,9 @@ public class Player : MonoBehaviour {
                 if(tileStateIsValidMove(desiredLocation))
                 {
                     this.transform.localPosition = desiredLocation;
+                    this.Column = (int)Mathf.Round(this.transform.localPosition.x);
+                    this.Row = -(int)Mathf.Round(this.transform.localPosition.z);
+            
                     moveTimer.Reset();
                 }
             }
