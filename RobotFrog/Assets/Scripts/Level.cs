@@ -291,6 +291,7 @@ public class Level : MonoBehaviour {
         int TileRadius = 1;
         Quaternion Rotation = Quaternion.identity;
         Color Tint = Color.white;
+        int JumpSound = 13;
         for(int row=0; row<MapAbove.Count && !bDidFind; ++row)
         {
             string tiles = MapAbove[row];
@@ -303,6 +304,7 @@ public class Level : MonoBehaviour {
                     if(tiles[column] == '1')
                     {
                         Tint = Color.red;
+                        JumpSound = 13;
                         Prefab = PlayerMainProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -313,6 +315,7 @@ public class Level : MonoBehaviour {
                     if(tiles[column] == '2')
                     {
                         Tint = Color.blue;
+                        JumpSound = 14;
                         Prefab = PlayerAltProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -323,6 +326,7 @@ public class Level : MonoBehaviour {
                     if(tiles[column] == '3')
                     {
                         Tint = Color.yellow;
+                        JumpSound = 13;
                         Prefab = PlayerMainProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -333,6 +337,7 @@ public class Level : MonoBehaviour {
                     if(tiles[column] == '4')
                     {
                         Tint = Color.magenta;
+                        JumpSound = 14;
                         Prefab = PlayerAltProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -354,6 +359,7 @@ public class Level : MonoBehaviour {
             var playerView = player.GetComponent<Player>();
             playerView.Level = this;
             playerView.Tint = Tint;
+            playerView.JumpSound = JumpSound;
             playerView.Column = (int)Mathf.Round(Position.x);
             playerView.Row = (int)Mathf.Round(-Position.z);
             bool bUseAltMat = spawnSlot >= 2;

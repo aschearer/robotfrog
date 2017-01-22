@@ -73,6 +73,8 @@ public class Player : MonoBehaviour {
 
     internal Color Tint { get; set; }
 
+    public int JumpSound { get; internal set; }
+
     internal Cursor Cursor { get; set; }
     public int Column { get; internal set; }
     public int Row { get; internal set; }
@@ -193,9 +195,7 @@ public class Player : MonoBehaviour {
                 tileStateIsValidMove(transform.localPosition + movementVector))
             {
                 this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
-                System.Random r = new System.Random();
-                int rInt = r.Next(13,15);
-                AudioManager.Instance.PlaySound(rInt);
+                AudioManager.Instance.PlaySound(JumpSound);
             }
         }
         if(canShoot == true)
