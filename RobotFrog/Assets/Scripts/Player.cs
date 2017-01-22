@@ -86,6 +86,10 @@ public class Player : MonoBehaviour {
     {
         //Debug.Log("moving to " + targetLocation);
 
+        this.Column = (int)Mathf.Round(targetLocation.x);
+        this.Row = (int)Mathf.Round(-targetLocation.z);
+        Debug.Log(string.Format("C:{0},R:{1}", this.Column, this.Row));
+
         var thetaSpeed = Mathf.PI / this.movementTime;
         var distanceToTravel = (targetLocation - this.transform.localPosition);
         var movementSpeed = distanceToTravel / this.movementTime;
@@ -135,9 +139,9 @@ public class Player : MonoBehaviour {
                     movementVector.z += inputData.VerticalAxis;
                 }
                 
-                if (tileStateIsValidMove(transform.localPosition + movementVector) && 
-                    movementVector.sqrMagnitude > 0.1 &&
-                    this.fireTimer <= 0)
+                if (movementVector.sqrMagnitude > 0.1 &&
+                    this.fireTimer <= 0 &&
+                    tileStateIsValidMove(transform.localPosition + movementVector))
                 {
                     isFlying = true;
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
@@ -170,7 +174,6 @@ public class Player : MonoBehaviour {
             this.Cursor.ShowLine(-1);
             var column = (int)Mathf.Round(this.transform.localPosition.x);
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
-
 
             var heading = this.Heading.ToEulerAngles();
             var distance = new Vector3(

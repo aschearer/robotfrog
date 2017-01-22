@@ -325,6 +325,7 @@ public class Level : MonoBehaviour {
             playerView.Cursor = cursorView;
             playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+            this.players.Add(playerView);
 
             var objectName = spawnSlot == 0 ? "RedPlayer" : "BluePlayer";
             var promptGameObject = GameObject.Find(objectName);
