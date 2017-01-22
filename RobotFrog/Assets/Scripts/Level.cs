@@ -16,6 +16,9 @@ public class Level : MonoBehaviour {
 
 
     public static LevelState levelState = LevelState.None;
+    public int world = 0;
+    public int MinPlayers = 2;
+    public int MaxPlayers = 2;
 
     public GameObject TileBarrier;
     public GameObject TileFloating;
@@ -55,67 +58,40 @@ public class Level : MonoBehaviour {
             controllers.Add(controller);
 
         }
-        if(Map.Count == 0)
+        switch(world)
         {
-            // 12x12 including walls
-            ////Map.Add("XXXXXXXXXXXX");
-            ////Map.Add("X__________X");
-            ////Map.Add("X_1________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X________2_X");
-            ////Map.Add("X__________X");
-            ////Map.Add("XXXXXXXXXXXX");
-
-            // 7x7
-            ////Map.Add("XXXXXXX");
-            ////Map.Add("X_____X");
-            ////Map.Add("X_____X");
-            ////Map.Add("X_____X");
-            ////Map.Add("X_____X");
-            ////Map.Add("X_____X");
-            ////Map.Add("XXXXXXX");
-
-            // 12x7
-            ////Map.Add("XXXXXXXXXXXX");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("X__________X");
-            ////Map.Add("XXXXXXXXXXXX");
-
-            // 10x7
-            ////Map.Add("XXXXXXXXXX");
-            ////Map.Add("X________X");
-            ////Map.Add("X_1______X");
-            ////Map.Add("X________X");
-            ////Map.Add("X______2_X");
-            ////Map.Add("X________X");
-            ////Map.Add("XXXXXXXXXX");
-
-            ////// 10x7 with columns
-            ////Map.Add("XXXXXXXXXX");
-            ////Map.Add("X_______WX");
-            ////Map.Add("X_1__W___X");
-            ////Map.Add("X___RB___X");
-            ////Map.Add("X___W__2_X");
-            ////Map.Add("XW_______X");
-            ////Map.Add("XXXXXXXXXX");
-
-            // 10x7 with columns
+            case 0:
+            // 8x5 with columns
             Map.Add("_______W");
             Map.Add("____W___");
             Map.Add("___RB___");
             Map.Add("___W____");
             Map.Add("W_______");
             MapAbove.Add("________");
+            MapAbove.Add("_1____3_");
+            MapAbove.Add("________");
+            MapAbove.Add("_4____2_");
+            MapAbove.Add("________");
+            break;
+            case 1:
+            // 10x8 with columns
+            Map.Add("_______W");
+            Map.Add("_W_____W");
+            Map.Add("_______W");
+            Map.Add("____W___");
+            Map.Add("___W____");
+            Map.Add("W_______");
+            Map.Add("W____W__");
+            Map.Add("W_______");
             MapAbove.Add("_1______");
+            MapAbove.Add("______3_");
             MapAbove.Add("________");
+            MapAbove.Add("________");
+            MapAbove.Add("________");
+            MapAbove.Add("________");
+            MapAbove.Add("_4______");
             MapAbove.Add("______2_");
-            MapAbove.Add("________");
+            break;
         }
     }
 
@@ -131,7 +107,7 @@ public class Level : MonoBehaviour {
                 if(SpawnTimer.Tick(Time.deltaTime))
                 {
                     int spawnSlot = PlayerCount();
-                    for(int i=spawnSlot; i<2; ++i)
+                    for(int i=spawnSlot; i<MinPlayers; ++i)
                     {
                         SpawnPlayer(i, i);
                     }
@@ -145,17 +121,10 @@ public class Level : MonoBehaviour {
                         {
                             int spawnSlot = PlayerCount();
                             SpawnPlayer(spawnSlot, i);
-                            // temp, launch the game when we hit two   
-                            if(PlayerCount() >= 2)
+                            if(PlayerCount() >= MaxPlayers)
                             {
-
                                 levelState = LevelState.Playing;
                             }
-                        }
-                        else
-                        {
-                            // quadruple tick
-                            SpawnTimer.Tick(Time.deltaTime*4.0f);
                         }
                     }
                 }
@@ -311,7 +280,7 @@ public class Level : MonoBehaviour {
                     case 2:
                     if(tiles[column] == '3')
                     {
-                        Tint = Color.green;
+                        Tint = Color.yellow;
                         Prefab = PlayerMainProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -321,7 +290,7 @@ public class Level : MonoBehaviour {
                     case 3:
                     if(tiles[column] == '4')
                     {
-                        Tint = Color.yellow;
+                        Tint = Color.magenta;
                         Prefab = PlayerAltProto;
                         spawnRow = row;
                         spawnCol = column;
@@ -338,13 +307,11 @@ public class Level : MonoBehaviour {
             Position.y += 1;
             GameObject player = Instantiate(Prefab, Vector3.zero, Rotation, this.Container);
             player.transform.localPosition = Position;
-            player.name = name;
+            player.name = "Player"+spawnSlot;
             var playerView = player.GetComponent<Player>();
             playerView.Level = this;
             playerView.Tint = Tint;
-            bool bUseAltMat = UnityEngine.Random.value > 0.5f ;
-            playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
-            playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+            bool bUseAltMat = spawnSlot >= 2;
             controllers[controller].Pawn = playerView;
 
             GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);
@@ -353,6 +320,9 @@ public class Level : MonoBehaviour {
             cursorView.Tint = Tint;
 
             playerView.Cursor = cursorView;
+            playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+            playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+            
         }
     }
 
