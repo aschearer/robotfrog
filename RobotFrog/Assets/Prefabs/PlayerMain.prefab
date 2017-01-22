@@ -210,6 +210,8 @@ MonoBehaviour:
   verticalMovementSpeed: {x: 0, y: 0, z: 0.2}
   MissilePrefab: {fileID: 114823877161870178, guid: 17a866ecbcdd5b448b3617ff655a5792,
     type: 2}
+  movementTime: 0.3
+  arcHeight: 0.4
   flyingModel: {fileID: 1228804186426572}
   sittingModel: {fileID: 1112988692890846}
   isFlying: 0
