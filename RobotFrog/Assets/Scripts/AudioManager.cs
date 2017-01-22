@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(int soundIndex)
     {
-        source.PlayOneShot(sounds[soundIndex]);
+        //source.PlayOneShot(sounds[soundIndex]);
     }
 
     // Use this for initialization
