@@ -62,31 +62,49 @@ public class Player : MonoBehaviour {
         }
 
         Vector3 movementVector = Vector3.zero;
-        if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0 && moveValid("right") == true)
+        if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0)
         {
             ++horizontal;
         }
-        else if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) < 0 && moveValid("left") == true)
+        else if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) < 0)
         {
             --horizontal;
         }
-        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) > 0 && moveValid("up") == true)
+        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) > 0)
         {
             ++vertical;
         }
-        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) < 0 && moveValid("down") == true)
+        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) < 0)
         {
             --vertical;
         }
-        //Debug.Log(Input.GetAxis(this.horizontalAxisName) + " << horizontal vertical >> " + Input.GetAxis(this.verticalAxisName));
         
         movementVector.x += horizontal;
         movementVector.z += vertical;
 
         this.UpdateHeading(horizontal, vertical);
 
-        if (this.fireTimer <= 0)
+        if (this.fireTimer <= 0 && movementVector != Vector3.zero)
         {
+            // adjust movementVector based on valid moves
+            if (movementVector.x < 0 && !moveValid("left"))
+            {
+                movementVector.x = 0;
+            }
+            else if (movementVector.x > 0 && !moveValid("right"))
+            {
+                movementVector.x = 0;
+            }
+
+            if (movementVector.z < 0 && !moveValid("down"))
+            {
+                movementVector.z = 0;
+            }
+            else if (movementVector.z > 0 && !moveValid("up"))
+            {
+                movementVector.z = 0;
+            }
+
             this.transform.position = this.transform.position + movementVector;
         }
 
