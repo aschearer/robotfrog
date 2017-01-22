@@ -386,12 +386,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114528087739385302, guid: a0b749029b64a03428496e947b6534b9,
-        type: 2}
-      propertyPath: Player2SpotProto
-      value: 
-      objectReference: {fileID: 1644596807312024, guid: aa53f7c5c4fd3f94e8151893af60c77d,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a0b749029b64a03428496e947b6534b9, type: 2}
   m_IsPrefabParent: 0

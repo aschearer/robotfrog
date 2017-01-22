@@ -149,20 +149,19 @@ public class Level : MonoBehaviour {
                 }
                 for(int i=0; i<6; ++i)
                 {
-                    if(controllers[i].inputData.PrimaryIsDown || controllers[i].isInTheGame)
+                    if(controllers[i].slotInTheGame >= 0 && !controllers[i].Pawn)
                     {
-                        if(!controllers[i].Pawn)
-                        {
-                            AudioManager.Instance.PlaySound(18);
-                            int spawnSlot = CountPlayers();
-                            SpawnPlayer(spawnSlot, i);
-                            if(CountPlayers() >= PlayerCount)
-                            {
-                                //Debug.Log("audio start");
-                                AudioManager.Instance.SetMusic(21);
-                                levelState = LevelState.Playing;
-                            }
-                        }
+                        SpawnPlayer(controllers[i].slotInTheGame, i);
+                        AfterPlayerJoin();
+                    }
+                }
+                for(int i=0; i<6; ++i)
+                {
+                    if(controllers[i].inputData.PrimaryIsDown && !controllers[i].Pawn)
+                    {
+                        int spawnSlot = CountPlayers();
+                        SpawnPlayer(spawnSlot, i);
+                        AfterPlayerJoin();
                     }
                 }
                 break;
@@ -182,6 +181,17 @@ public class Level : MonoBehaviour {
         }
         
 
+    }
+
+    private void AfterPlayerJoin()
+    {
+        AudioManager.Instance.PlaySound(18);
+        if(CountPlayers() >= PlayerCount)
+        {
+            //Debug.Log("audio start");
+            AudioManager.Instance.SetMusic(21);
+            levelState = LevelState.Playing;
+        }
     }
 
     private int CountPlayers()
@@ -409,7 +419,7 @@ public class Level : MonoBehaviour {
             playerView.Column = (int)Mathf.Round(Position.x);
             playerView.Row = (int)Mathf.Round(-Position.z);
             bool bUseAltMat = spawnSlot >= 2;
-            controllers[controller].isInTheGame = true;
+            controllers[controller].slotInTheGame = spawnSlot;
             controllers[controller].Pawn = playerView;
 
             GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);
