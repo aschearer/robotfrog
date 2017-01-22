@@ -17,9 +17,9 @@ public class Cursor : MonoBehaviour {
         for(int i=0; i<6; ++i)
         {
             GameObject cube = GameObject.Instantiate(CubeProto, 
-                Vector3.zero, Quaternion.identity, this.transform);
+                CubeProto.transform.position, CubeProto.transform.rotation, this.transform);
             cube.transform.SetParent(this.transform, false);
-            cube.transform.localPosition = Vector3.forward*(i+1);
+            cube.transform.localPosition = Vector3.forward*(i+1) - Vector3.up*0.40f;
             cube.name = "Cube"+i;
             cube.SetActive(false);
             Cubes.Add(cube);
