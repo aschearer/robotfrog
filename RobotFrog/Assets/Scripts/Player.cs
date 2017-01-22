@@ -134,7 +134,7 @@ public class Player : MonoBehaviour {
         canJump = false;
         var lastTile = this.Level.GetTileAt(Column, Row);
         lastTile.OnTouchExit(this);
-        if(lastTile.State == TileState.SinkingPad)
+        if(lastTile.State == TileState.SinkingPad || lastTile.State == TileState.FloatingBox)
         {
             Level.ExplodeAt(lastTile, 0, 1);
         }

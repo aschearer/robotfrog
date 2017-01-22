@@ -31,6 +31,9 @@ public class TileFloating : Tile {
     [SerializeField]
     private int Height;
     [SerializeField]
+    private int PlatformHeight;
+
+    [SerializeField]
     private UpDown UpDownState;
 
     public float canMoveTimeStamp;
@@ -39,12 +42,23 @@ public class TileFloating : Tile {
 
     public int Steps = 5;
 
-    private float VerticalOffset;
+    private float WaterOffset;
+    private float PlatformOffset;
+    private float TotalOffset;
+
+    private float timeTouching = 0.0f;
+
+    private float touchingSinkTimer = 0.8f;
 
     void Start ()
     {
         State = DefaultState;
         Phase = ShockPhase.Peace;
+        if(State == TileState.FloatingBox)
+        {
+            PlatformHeight = 2;
+            HandleHeightChange();
+        }
     }
     
     void Update () 
@@ -75,6 +89,36 @@ public class TileFloating : Tile {
                 }
             }
         }
+        if(State == TileState.FloatingBox)
+        {   
+            if(TouchingPlayers.Count > 0)
+            {
+                timeTouching += Time.deltaTime;
+                if(PlatformHeight == 2)
+                {
+                    PlatformHeight--;
+                    HandleHeightChange();
+                }
+            }
+            else
+            {   
+                if(PlatformHeight < 2)
+                {
+                    PlatformHeight++;
+                }
+                timeTouching = 0.0f;
+            }
+            if(!IsMoving())
+            {
+                if(timeTouching > touchingSinkTimer)
+                {
+                    PlatformHeight--;
+                    HandleHeightChange();
+                    timeTouching = 0.01f;
+                }
+            }
+        }
+
     }
 
     bool IsMoving()
@@ -138,7 +182,7 @@ public class TileFloating : Tile {
 
     protected override void OnPlayerTouchingAdd(Player InPlayer)
     {
-        InPlayer.HandleSurfaceChange(IsSubmerged(), VerticalOffset);
+        InPlayer.HandleSurfaceChange(IsSubmerged(), TotalOffset);
     }
 
     protected override void OnPlayerTouchingRemove(Player InPlayer)
@@ -152,6 +196,7 @@ public class TileFloating : Tile {
         //bool bVeryHigh = Phase == ShockPhase.Quake && Height > 0;
         bool bHigh = Height > 0;
         bool bVeryLow = Phase == ShockPhase.Quake && Height < 0;
+        bool bPlatformLow = PlatformHeight <= -3;
         switch(State)
         {
             case TileState.Water:
@@ -161,6 +206,8 @@ public class TileFloating : Tile {
                 return bVeryLow;
             case TileState.Rock:
                 return bHigh;
+            case TileState.FloatingBox:
+                return bPlatformLow;
             default:
                 break;
         }
@@ -169,11 +216,22 @@ public class TileFloating : Tile {
 
     }
 
+
+
     protected void HandleHeightChange()
     {
         Vector3 TilePosition = this.transform.position;
-        VerticalOffset = (float)Height/Steps*GetAmplitude();
-        TilePosition.y = VerticalOffset;
+        WaterOffset = (float)Height/Steps*GetAmplitude();
+        PlatformOffset = (float)PlatformHeight/Steps*0.5f;
+        if(State != TileState.Rock)
+        {
+            TotalOffset = WaterOffset + PlatformOffset;
+        }
+        else
+        {
+            TotalOffset = 0;
+        }
+        TilePosition.y = WaterOffset;
         this.transform.position = TilePosition;
 
         if(Platform)
@@ -181,7 +239,11 @@ public class TileFloating : Tile {
             Platform.SetActive(!IsSubmerged());
             if(State == TileState.Rock)
             {
-                Platform.transform.localPosition = -Vector3.up*VerticalOffset;
+                Platform.transform.localPosition = -Vector3.up*WaterOffset;
+            }
+            else
+            {
+                Platform.transform.localPosition = Vector3.up*PlatformOffset;
             }
         }
 
@@ -189,7 +251,7 @@ public class TileFloating : Tile {
         {
             if (player)
             {
-                player.HandleSurfaceChange(IsSubmerged(), VerticalOffset);
+                player.HandleSurfaceChange(IsSubmerged(), TotalOffset);
             }
         }
     }
