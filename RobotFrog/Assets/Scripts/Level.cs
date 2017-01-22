@@ -322,6 +322,8 @@ public class Level : MonoBehaviour {
             var playerView = player.GetComponent<Player>();
             playerView.Level = this;
             playerView.Tint = Tint;
+            playerView.Column = (int)Mathf.Round(Position.x);
+            playerView.Row = (int)Mathf.Round(-Position.z);
             bool bUseAltMat = spawnSlot >= 2;
             controllers[controller].isInTheGame = true;
             controllers[controller].Pawn = playerView;
