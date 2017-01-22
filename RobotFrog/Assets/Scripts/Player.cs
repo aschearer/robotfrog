@@ -77,7 +77,7 @@ public class Player : MonoBehaviour {
 
         if(canShootTimeStamp < Time.time)
         {
-            Debug.Log("can shoot");
+            //Debug.Log("can shoot");
             canShoot = true;
         }
 
@@ -141,6 +141,9 @@ public class Player : MonoBehaviour {
                 {
                     isFlying = true;
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
+                    System.Random r = new System.Random();
+                    int rInt = r.Next(0, 13);
+                    GameObject.Find("Main Camera").GetComponent<AudioManager>().PlaySound(rInt);
                 }
             }
             
@@ -187,7 +190,7 @@ public class Player : MonoBehaviour {
             missileView.Target = new Vector3(targetColumn, 0, -targetRow);
             canShoot = false;
             canShootTimeStamp = Time.time + shotDelay;
-            Debug.Log("shot fired: " + Time.time + "can shoot next -> " + canShootTimeStamp);
+            //Debug.Log("shot fired: " + Time.time + "can shoot next -> " + canShootTimeStamp);
             this.fireTimer = 0;
         }
     }
