@@ -107,18 +107,18 @@ public class Level : MonoBehaviour {
                 levelState = LevelState.WaitingToSpawn;
                 break;
             case LevelState.WaitingToSpawn:
-                ////if(SpawnTimer.Tick(Time.deltaTime))
-                ////{
-                ////    int spawnSlot = PlayerCount();
-                ////    for(int i=spawnSlot; i<MinPlayers; ++i)
-                ////    {
-                ////        SpawnPlayer(i, i);
-                ////    }
-                ////    levelState = LevelState.Playing;
-                ////}
+                /*if(SpawnTimer.Tick(Time.deltaTime))
+                {
+                    int spawnSlot = PlayerCount();
+                    for(int i=spawnSlot; i<MinPlayers; ++i)
+                    {
+                        SpawnPlayer(i, i);
+                    }
+                    levelState = LevelState.Playing;
+                }*/
                 for(int i=0; i<6; ++i)
                 {
-                    if(controllers[i].inputData.PrimaryIsDown)
+                    if(controllers[i].inputData.PrimaryIsDown || controllers[i].isInTheGame)
                     {
                         if(!controllers[i].Pawn)
                         {
@@ -315,6 +315,7 @@ public class Level : MonoBehaviour {
             playerView.Level = this;
             playerView.Tint = Tint;
             bool bUseAltMat = spawnSlot >= 2;
+            controllers[controller].isInTheGame = true;
             controllers[controller].Pawn = playerView;
 
             GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);

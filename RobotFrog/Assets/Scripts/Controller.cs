@@ -17,6 +17,8 @@ public class Controller : MonoBehaviour {
 
     public Player Pawn;
 
+    public bool isInTheGame = false;
+
     public InputData inputData;
 
     void Update()
