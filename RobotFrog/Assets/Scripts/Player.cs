@@ -14,12 +14,6 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private Missile MissilePrefab;
 
-    private string horizontalAxisName;
-
-    private string verticalAxisName;
-
-    private string fireAxisName;
-
     private float fireTimer;
 
     [SerializeField]
@@ -33,10 +27,11 @@ public class Player : MonoBehaviour {
 
     private bool wasFlying;
 
+    private ManualTimer moveTimer = new ManualTimer();
+
     internal Heading Heading { get; private set; }
 
     [SerializeField]
-    internal ControllerId playerId;
 
     internal Level Level { get; set; }
 
@@ -45,70 +40,13 @@ public class Player : MonoBehaviour {
     internal Cursor Cursor { get; set; }
 
     void Start () {
-        this.horizontalAxisName = "Horizontal-" + this.playerId;
-        this.verticalAxisName = "Vertical-" + this.playerId;
-        this.fireAxisName = "Fire1-" + this.playerId;
+        moveTimer.SetTime(1.0f);
+        moveTimer.IsLooping = false;
     }
     
     void Update ()
     {
-        //if the check passes IE. no obstacles player moves
-        float horizontal = 0;
-        float vertical = 0;
-
-        if (Level.IsGameOver)
-        {
-            return;
-        }
-
-        Vector3 movementVector = Vector3.zero;
-        if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0)
-        {
-            ++horizontal;
-        }
-        else if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) < 0)
-        {
-            --horizontal;
-        }
-        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) > 0)
-        {
-            ++vertical;
-        }
-        else if (Input.GetButtonDown(this.verticalAxisName) && Input.GetAxis(this.verticalAxisName) < 0)
-        {
-            --vertical;
-        }
-        
-        movementVector.x += horizontal;
-        movementVector.z += vertical;
-
-        this.UpdateHeading(horizontal, vertical);
-
-        if (this.fireTimer <= 0 && movementVector != Vector3.zero)
-        {
-            // adjust movementVector based on valid moves
-            if (movementVector.x < 0 && !moveValid("left"))
-            {
-                movementVector.x = 0;
-            }
-            else if (movementVector.x > 0 && !moveValid("right"))
-            {
-                movementVector.x = 0;
-            }
-
-            if (movementVector.z < 0 && !moveValid("down"))
-            {
-                movementVector.z = 0;
-            }
-            else if (movementVector.z > 0 && !moveValid("up"))
-            {
-                movementVector.z = 0;
-            }
-
-            this.transform.position = this.transform.position + movementVector;
-        }
-
-        this.FireWeapon();
+        moveTimer.Tick(Time.deltaTime);
 
         if (isFlying != wasFlying)
         {
@@ -118,9 +56,44 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void FireWeapon()
+    public void HandleInput(InputData inputData)
     {
-        if (Input.GetButton(this.fireAxisName))
+        if (Level.levelState == LevelState.GameOver)
+        {
+            return;
+        }
+
+        this.UpdateHeading(inputData.HorizontalAxis, inputData.VerticalAxis);
+        if (Level.levelState == LevelState.WaitingToSpawn)
+        {
+            return;
+        }
+        if(!moveTimer.IsTicking())
+        {
+            Vector3 movementVector = Vector3.zero;
+
+
+            movementVector.x += inputData.HorizontalAxis;
+            movementVector.z += inputData.VerticalAxis;
+            if (this.fireTimer <= 0 && movementVector != Vector3.zero)
+            {
+                Vector3 desiredLocation = this.transform.localPosition + movementVector;
+
+                if(tileStateIsValidMove(desiredLocation))
+                {
+                    this.transform.localPosition = desiredLocation;
+                    moveTimer.Reset();
+                }
+            }
+        }
+
+        this.FireWeapon(inputData.PrimaryIsDown);
+
+    }
+
+    private void FireWeapon(bool isFiring)
+    {
+        if (isFiring)
         {
             this.fireTimer += Time.deltaTime * 2f;
             this.Cursor.ShowLine(2);
@@ -207,45 +180,19 @@ public class Player : MonoBehaviour {
         this.transform.localScale = Vector3.one;
     }
 
-    bool moveValid(string attemptedMove)
-    {
-        Vector3 tempPosition = transform.localPosition;
-        if(attemptedMove.CompareTo("up") == 0)
-        {
-            ++tempPosition.z;
-            return tileStateIsValidMove(tempPosition);
-        }
-        else if (attemptedMove.CompareTo("down") == 0)
-        {
-            --tempPosition.z;
-            return tileStateIsValidMove(tempPosition);
-        }
-        else if (attemptedMove.CompareTo("right") == 0)
-        {
-            ++tempPosition.x;
-            return tileStateIsValidMove(tempPosition);
-        }
-        else if (attemptedMove.CompareTo("left") == 0)
-        {
-            --tempPosition.x;
-            return tileStateIsValidMove(tempPosition);
-        }
-
-        return false;
-    }
 
     bool tileStateIsValidMove(Vector3 nextPosition)
     {
         int column = (int)Mathf.Round(nextPosition.x);
         int row = (int)Mathf.Round(-nextPosition.z);
-        Debug.Log(string.Format("Looked at: {0},{1}", column, row));
+        //Debug.Log(string.Format("Looked at: {0},{1}", column, row));
         var tile = Level.GetTileAt(column, row);
         if (tile == null)
         {
             return false;
         }
 
-        Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
+        //Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
 
         TileState state = tile.State;
         switch (state)

@@ -1,7 +1,7 @@
 ﻿
 public class ManualTimer {
     
-
+    public bool IsLooping = true;
     public float TimeRemaining = 1.0f;
     public float Duration = 1.0f;
     
@@ -13,13 +13,30 @@ public class ManualTimer {
 
     public bool Tick(float DeltaTime)
     {
+        if(!IsTicking())
+        {
+            return false;
+        }
         TimeRemaining -= DeltaTime;
         if(TimeRemaining < 0.0f)
         {
-            TimeRemaining += Duration;
+            if(IsLooping)
+            {
+                TimeRemaining += Duration;
+            }
             return true;
         }
         return false;
+    }
+
+    public void Reset()
+    {
+        TimeRemaining = Duration;
+    }
+
+    public bool IsTicking()
+    {
+        return TimeRemaining >= 0.0f;
     }
 
 }

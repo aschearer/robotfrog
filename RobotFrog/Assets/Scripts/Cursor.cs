@@ -26,6 +26,7 @@ public class Cursor : MonoBehaviour {
         }
         CubeProto.SetActive(false);
         Bullseye.SetActive(false);
+
     }
 
 
@@ -35,8 +36,11 @@ public class Cursor : MonoBehaviour {
         {
             Cubes[i].SetActive(i<size);
         }
-        int spot = Mathf.Clamp(size,0,Cubes.Count-1);
-        Bullseye.transform.localPosition = Cubes[spot].transform.localPosition;
-        Bullseye.SetActive(size > 0);
+        if(Cubes.Count > 0)
+        {
+            int spot = Mathf.Clamp(size,0,Cubes.Count-1);
+            Bullseye.transform.localPosition = Cubes[spot].transform.localPosition;
+            Bullseye.SetActive(size > 0);
+        }
     }
 }
