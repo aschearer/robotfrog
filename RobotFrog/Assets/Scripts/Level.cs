@@ -36,6 +36,8 @@ public class Level : MonoBehaviour {
 
     private List<Controller> controllers = new List<Controller>();
 
+    private List<Player> players = new List<Player>();
+    
     private ManualTimer SpawnTimer = new ManualTimer();
 
     public void Start()
@@ -212,7 +214,7 @@ public class Level : MonoBehaviour {
 
         for (float t = 0; t < 1; t += Time.deltaTime)
         {
-            twirl.angle = 180 * (1 - t);
+            twirl.angle = 180 + 180 * t;
             yield return null;
         }
 
@@ -335,8 +337,24 @@ public class Level : MonoBehaviour {
         }
     }
 
+    internal Player GetPlayerAt(int column, int row)
+    {
+        foreach (var player in this.players)
+        {
+            if (player != null && player.Column == column && player.Row == row)
+            {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     public void MakeLevel(List<string> Map)
     {
+    	this.players.Clear();
+        this.tiles.Clear();
+        
         this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
         int numberOfColumns = 0;

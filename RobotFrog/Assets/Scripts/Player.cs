@@ -185,24 +185,36 @@ public class Player : MonoBehaviour {
     {
         int column = (int)Mathf.Round(nextPosition.x);
         int row = (int)Mathf.Round(-nextPosition.z);
-        //Debug.Log(string.Format("Looked at: {0},{1}", column, row));
+        Debug.Log(string.Format("Looked at: {0},{1}", column, row));
         var tile = Level.GetTileAt(column, row);
         if (tile == null)
         {
             return false;
         }
 
-        //Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
+        Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
 
+        bool isValidMove = false;
         TileState state = tile.State;
         switch (state)
         {
             case TileState.SinkingPad:
             case TileState.FloatingBox:
             case TileState.Rock:
-                return true;
+                isValidMove = true;
+                break;
             default:
-                return false;
+                isValidMove = false;
+                break;
         }
+
+        if (isValidMove)
+        {
+            // Valid tile, but is it occupied?
+            var player = Level.GetPlayerAt(column, row);
+            isValidMove = player == null;
+        }
+
+        return isValidMove;
     }
 }
