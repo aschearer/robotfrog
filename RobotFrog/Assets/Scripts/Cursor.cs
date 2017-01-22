@@ -25,7 +25,7 @@ public class Cursor : MonoBehaviour {
             
             Cubes.Add(cube);
         }
-        CubeProto.SetActive(false);
+        GameObject.Destroy(CubeProto);
         Bullseye.SetActive(false);
         ApplyTint();
 
@@ -45,13 +45,17 @@ public class Cursor : MonoBehaviour {
     {
         for(int i=0; i<Cubes.Count; ++i)
         {
-            Cubes[i].SetActive(i<size);
+            Cubes[i].SetActive(i<size - 1 && Level.levelState != LevelState.GameOver);
         }
-        if(Cubes.Count > 0)
+
+        if (size > 0 && Level.levelState != LevelState.GameOver)
         {
-            int spot = Mathf.Clamp(size,0,Cubes.Count-1);
-            Bullseye.transform.localPosition = Cubes[spot].transform.localPosition;
-            Bullseye.SetActive(size > 0);
+            Bullseye.transform.localPosition = Cubes[size - 1].transform.localPosition;
+            Bullseye.gameObject.SetActive(true);
+        }
+        else
+        {
+            Bullseye.gameObject.SetActive(false);
         }
     }
 }

@@ -171,6 +171,14 @@ public class Level : MonoBehaviour {
 
     private IEnumerator GameOverSequence()
     {
+        foreach (var player in this.players)
+        {
+            if (player)
+            {
+                player.GameOver();
+            }
+        }
+
         var position = this.transform.localPosition;
         for (float t = 0; t < 1; t += Time.deltaTime * 5)
         {

@@ -84,6 +84,12 @@ public class Player : MonoBehaviour {
         }
 
     }
+
+    public void GameOver()
+    {
+        this.Cursor.ShowLine(-1);
+    }
+
     IEnumerator jumpAnimation(Vector3 targetLocation)
     {
         //Debug.Log("moving to " + targetLocation);
@@ -159,16 +165,14 @@ public class Player : MonoBehaviour {
             }
             
         }
-        
-
     }
 
     private void FireWeapon(bool isFiring)
     {
         if (isFiring)
         {
-            this.fireTimer += Time.deltaTime;
-            this.fireRange = this.fireTimer - Mathf.Floor(this.fireTimer) > 0.5f ? 2 : 3;
+            this.fireTimer += Time.deltaTime * 2;
+            this.fireRange = 1 + ((int)this.fireTimer % 4);
             this.Cursor.ShowLine(fireRange);
         }
         else if (this.fireTimer > 0)
@@ -179,7 +183,7 @@ public class Player : MonoBehaviour {
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
 
             var heading = this.Heading.ToEulerAngles();
-            int distanceTiles = 1 + fireRange;
+            int distanceTiles = fireRange;
             var distance = new Vector3(
                 (int)(distanceTiles * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
                 0,
