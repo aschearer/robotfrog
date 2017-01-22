@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4686045164223156}
   - component: {fileID: 33096898434524856}
   - component: {fileID: 23998565193440794}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4227160585707134}
   - component: {fileID: 114664902326652668}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HyperStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,4 +120,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09bb9a68f9955540a96c14264399389, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Owner: {fileID: 0}
+  OwnerTile: {fileID: 0}
+  OwnerPlayer: {fileID: 0}
