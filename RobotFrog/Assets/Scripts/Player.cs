@@ -14,6 +14,17 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private Missile MissilePrefab;
 
+    [SerializeField]
+    private float movementTime = 0.6f;
+
+    [SerializeField]
+    private float arcHeight = 0.40f;
+
+
+    private string horizontalAxisName;
+
+    private string verticalAxisName;
+
     private float fireTimer;
 
     [SerializeField]
@@ -48,8 +59,6 @@ public class Player : MonoBehaviour {
     
     void Update ()
     {
-        moveTimer.Tick(Time.deltaTime);
-
         if (isFlying != wasFlying)
         {
             wasFlying = isFlying;
@@ -57,7 +66,27 @@ public class Player : MonoBehaviour {
             sittingModel.SetActive(!isFlying);
         }
     }
+    IEnumerator jumpAnimation(Vector3 targetLocation)
+    {
+        Debug.Log("moving to " + targetLocation);
 
+        var thetaSpeed = Mathf.PI / this.movementTime;
+        var distanceToTravel = (targetLocation - this.transform.localPosition);
+        var movementSpeed = distanceToTravel / this.movementTime;
+        var basePosition = this.transform.localPosition;
+        for (float t = 0; t < this.movementTime; t += Time.deltaTime)
+        {
+            var y = Mathf.Sin(t * thetaSpeed);
+            var position = t * movementSpeed;
+            position.y = y * arcHeight;
+            this.transform.localPosition = basePosition + position;
+            Debug.Log(this.transform.localPosition + "in loop");
+            yield return null;
+        }
+
+        this.transform.localPosition = targetLocation;
+        isFlying = false;
+    }
     public void HandleInput(InputData inputData)
     {
         if (Level.levelState == LevelState.GameOver)
@@ -70,28 +99,19 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        if(!moveTimer.IsTicking())
+        if (isFlying == false)
         {
-            Vector3 movementVector = Vector3.zero;
 
+            Vector3 movementVector = Vector3.zero;
 
             movementVector.x += inputData.HorizontalAxis;
             movementVector.z += inputData.VerticalAxis;
-            if (this.fireTimer <= 0 && movementVector != Vector3.zero)
+            if (tileStateIsValidMove(transform.localPosition + movementVector) && movementVector.sqrMagnitude > 0.1)
             {
-                Vector3 desiredLocation = this.transform.localPosition + movementVector;
-
-                if(tileStateIsValidMove(desiredLocation))
-                {
-                    this.transform.localPosition = desiredLocation;
-                    this.Column = (int)Mathf.Round(this.transform.localPosition.x);
-                    this.Row = -(int)Mathf.Round(this.transform.localPosition.z);
-            
-                    moveTimer.Reset();
-                }
+                isFlying = true;
+                this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
             }
         }
-
         this.FireWeapon(inputData.PrimaryIsDown);
 
     }
