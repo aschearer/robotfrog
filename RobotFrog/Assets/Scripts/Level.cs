@@ -472,6 +472,7 @@ public class Level : MonoBehaviour {
         {
             var containerPosition = Vector3.zero;
             containerPosition.x = -((numberOfColumns - 1) / 2f);
+            containerPosition.z = (Map.Count -1) / 2f;
             this.Container.transform.localPosition = containerPosition;
         }
     }
