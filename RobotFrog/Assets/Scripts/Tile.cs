@@ -27,50 +27,47 @@ public class Tile : MonoBehaviour {
     {
     }
 
-    void OnCollisionEnter(Collision InCollision)
+    public void OnTouchEnter(Player OtherPlayer)
     {
-        Collider OtherCollider = InCollision.collider;
-        Player OtherPlayer = OtherCollider.GetComponent<Player>();
-        if(OtherPlayer)
+        if(!TouchingPlayers.Contains(OtherPlayer))
         {
-            if(!TouchingPlayers.Contains(OtherPlayer))
-            {
-                TouchingPlayers.Add(OtherPlayer);
-                OnPlayerTouchingAdd(OtherPlayer);
-            }
-        }
-        else
-        {
-            //Debug.Log("Not a player?"+OtherCollider);
+            TouchingPlayers.Add(OtherPlayer);
+            OnPlayerTouchingAdd(OtherPlayer);
         }
     }
 
-    void OnCollisionExit(Collision InCollision)
+    public void OnTouchExit(Player OtherPlayer)
     {
-        Collider OtherCollider = InCollision.collider;
-        Player OtherPlayer = OtherCollider.GetComponent<Player>();
-        if(OtherPlayer)
+        if(TouchingPlayers.Contains(OtherPlayer))
         {
-            if(TouchingPlayers.Contains(OtherPlayer))
-            {
-                TouchingPlayers.Remove(OtherPlayer);
-                OnPlayerTouchingRemove(OtherPlayer);
-            }
+            TouchingPlayers.Remove(OtherPlayer);
+            OnPlayerTouchingRemove(OtherPlayer);
         }
     }
 
-    public virtual IEnumerator HandleExplode(float delay)
+    public virtual IEnumerator HandleExplode(int magnitude, float delay)
     {
         yield return null;
     }
 
     protected virtual void OnPlayerTouchingAdd(Player InPlayer)
     {
-    	InPlayer.HandleSurfaceChange(State == TileState.Water);
+    	InPlayer.HandleSurfaceChange(State == TileState.Water, 0.0f);
     }
 
     protected virtual void OnPlayerTouchingRemove(Player InPlayer)
     {
     	InPlayer.HandleSurfaceRemove();
+    }
+
+    public void KillPlayers()
+    {
+        foreach(Player player in TouchingPlayers)
+        {
+            if (player)
+            {
+                player.Die();
+            }
+        }
     }
 }

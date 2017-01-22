@@ -91,7 +91,6 @@ public class Missile : MonoBehaviour
 
     private void CommitSuicide()
     {
-        Level.MakeSplash(this.transform.position);
         GameObject.Destroy(this.gameObject);
     }
 
@@ -103,6 +102,8 @@ public class Missile : MonoBehaviour
 
         if (tile)
         {
+            tile.KillPlayers();
+            Level.MakeSplash(tile.transform.position);
             this.Level.ExplodeAt(tile, this.BlastRadius);
         }
     }

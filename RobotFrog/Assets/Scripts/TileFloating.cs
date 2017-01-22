@@ -32,26 +32,27 @@ public class TileFloating : Tile {
     private int Height;
     [SerializeField]
     private UpDown UpDownState;
-    [SerializeField]
-    private ManualTimer Timer;
+
+    public float canMoveTimeStamp;
 
     public int HalfPeriodCount;
 
     public int Steps = 5;
 
+    private float VerticalOffset;
+
     void Start ()
     {
         State = DefaultState;
-        Timer = new ManualTimer();
-        Timer.SetTime(0.1f);
         Phase = ShockPhase.Peace;
     }
     
     void Update () 
     {
         float DeltaTime = Time.deltaTime;
-        if(IsMoving() && Timer.Tick(DeltaTime))
+        if(IsMoving() && Time.time > canMoveTimeStamp)
         {
+            canMoveTimeStamp = Time.time + 0.1f;
             if(UpDownState == UpDown.MovingUp)
             {
                 MoveUp();
@@ -118,23 +119,32 @@ public class TileFloating : Tile {
         }
     }
 
-    public override IEnumerator HandleExplode(float delay)
+    public override IEnumerator HandleExplode(int magnitude, float delay)
     {
         if (delay > 0)
         {
             yield return new WaitForSeconds(delay);
         }
-
-        Phase = ShockPhase.Quake;
-        HalfPeriodCount = 4;
-        UpDownState = UpDown.MovingDown;
+        if(Phase == ShockPhase.Peace)
+        {
+            if(magnitude >= 2)
+            {
+                Phase = ShockPhase.Quake;
+            }
+            else
+            {
+                Phase = ShockPhase.Tremor;
+            }
+            HalfPeriodCount = magnitude*2;
+            UpDownState = UpDown.MovingDown;    
+        }
         yield return null;
     }
 
 
     protected override void OnPlayerTouchingAdd(Player InPlayer)
     {
-        InPlayer.HandleSurfaceChange(IsSubmerged());
+        InPlayer.HandleSurfaceChange(IsSubmerged(), VerticalOffset);
     }
 
     protected override void OnPlayerTouchingRemove(Player InPlayer)
@@ -168,7 +178,7 @@ public class TileFloating : Tile {
     protected void HandleHeightChange()
     {
         Vector3 TilePosition = this.transform.position;
-        float VerticalOffset = (float)Height/Steps*GetAmplitude();
+        VerticalOffset = (float)Height/Steps*GetAmplitude();
         TilePosition.y = VerticalOffset;
         this.transform.position = TilePosition;
 
@@ -185,7 +195,7 @@ public class TileFloating : Tile {
         {
             if (player)
             {
-                player.HandleSurfaceChange(IsSubmerged());
+                player.HandleSurfaceChange(IsSubmerged(), VerticalOffset);
             }
         }
     }

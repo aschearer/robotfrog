@@ -16,9 +16,7 @@ public class Level : MonoBehaviour {
 
 
     public static LevelState levelState = LevelState.None;
-    public int world = 0;
-    public int MinPlayers = 2;
-    public int MaxPlayers = 2;
+    public int PlayerCount = 2;
 
     public GameObject TileBarrier;
     public GameObject TileFloating;
@@ -61,9 +59,11 @@ public class Level : MonoBehaviour {
             controllers.Add(controller);
 
         }
-        switch(world)
+        switch(PlayerCount)
         {
             case 0:
+            case 1:
+            case 2:
             // 8x5 with columns
             Map.Add("_R____W_");
             Map.Add("_R_BWB__");
@@ -76,15 +76,16 @@ public class Level : MonoBehaviour {
             MapAbove.Add("_4____2_");
             MapAbove.Add("________");
             break;
-            case 1:
+            case 3:
+            case 4:
             // 10x8 with columns
             Map.Add("_______W");
-            Map.Add("_W_____W");
-            Map.Add("_______W");
-            Map.Add("____W___");
-            Map.Add("___W____");
-            Map.Add("W_______");
-            Map.Add("W____W__");
+            Map.Add("_WR____W");
+            Map.Add("_R_____W");
+            Map.Add("____WBB_");
+            Map.Add("_BBW____");
+            Map.Add("W_____R_");
+            Map.Add("W____RW_");
             Map.Add("W_______");
             MapAbove.Add("_1______");
             MapAbove.Add("______3_");
@@ -115,24 +116,24 @@ public class Level : MonoBehaviour {
                 levelState = LevelState.WaitingToSpawn;
                 break;
             case LevelState.WaitingToSpawn:
-                /*if(SpawnTimer.Tick(Time.deltaTime))
+                if(PlayerCount > 2 && SpawnTimer.Tick(Time.deltaTime))
                 {
-                    int spawnSlot = PlayerCount();
-                    for(int i=spawnSlot; i<MinPlayers; ++i)
+                    int spawnSlot = CountPlayers();
+                    for(int i=spawnSlot; i<PlayerCount; ++i)
                     {
                         SpawnPlayer(i, i);
                     }
                     levelState = LevelState.Playing;
-                }*/
+                }
                 for(int i=0; i<6; ++i)
                 {
                     if(controllers[i].inputData.PrimaryIsDown || controllers[i].isInTheGame)
                     {
                         if(!controllers[i].Pawn)
                         {
-                            int spawnSlot = PlayerCount();
+                            int spawnSlot = CountPlayers();
                             SpawnPlayer(spawnSlot, i);
-                            if(PlayerCount() >= MaxPlayers)
+                            if(CountPlayers() >= PlayerCount)
                             {
                                 levelState = LevelState.Playing;
                             }
@@ -141,7 +142,7 @@ public class Level : MonoBehaviour {
                 }
                 break;
             case LevelState.Playing:
-                if(PlayerCount() < 2)
+                if(CountPlayers() < 2)
                 {
                     levelState = LevelState.GameOver;
                     this.StartCoroutine(GameOverSequence());
@@ -152,7 +153,7 @@ public class Level : MonoBehaviour {
 
     }
 
-    private int PlayerCount()
+    private int CountPlayers()
     {
         // Test for end-game condition
         int playerCount = 0;
@@ -228,7 +229,7 @@ public class Level : MonoBehaviour {
         levelState = LevelState.WaitingToSpawn;
     }
 
-    public void ExplodeAt(Tile tile, int radius)
+    public void ExplodeAt(Tile origin, int radius, int magnitude = 2, bool includeSelf = true)
     {
         foreach (var neighbor in this.tiles)
         {
@@ -236,11 +237,16 @@ public class Level : MonoBehaviour {
             {
                 continue;
             }
+            if(!includeSelf && neighbor == origin)
+            {
+                continue;
+            }
 
-            var distance = Mathf.Abs(tile.Column - neighbor.Column) + Mathf.Abs(tile.Row - neighbor.Row);
+            var distance = Mathf.Abs(origin.Column - neighbor.Column) + Mathf.Abs(origin.Row - neighbor.Row);
             if (distance <= radius)
             {
-                this.StartCoroutine(neighbor.HandleExplode(distance * 0.4f));
+
+                this.StartCoroutine(neighbor.HandleExplode(magnitude, distance * 0.4f));
             }
         }
     }

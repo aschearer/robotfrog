@@ -39,12 +39,25 @@ public class Player : MonoBehaviour {
 
     public GameObject sittingModel;
 
+    public float playerHeight = 1.0f;
+
+    private float tileHeight = 0.0f;
+
     [SerializeField]
     private bool isFlying = false;
 
+    private bool canJump = true;
+
     private bool wasFlying;
 
-    private ManualTimer landTimer = new ManualTimer();
+    private bool canPound = true;
+
+    private float canPoundTimeStamp  = 0;
+
+    private bool isPounding = false;
+
+    private float PoundFloatHeight = 0.0f;
+
 
     internal Heading Heading { get; private set; }
 
@@ -59,17 +72,19 @@ public class Player : MonoBehaviour {
     public int Row { get; internal set; }
 
     void Start () {
-        ////landTimer.SetTime(0.45f);
-        landTimer.IsLooping = false;
+
+        canPound = false;
+        canPoundTimeStamp = Time.time + 0.25f;
         canShoot = false;
         canShootTimeStamp = Time.time + 0.25f;
     }
     
     void Update ()
     {
-        if(landTimer.IsTicking())
+        
+        if(canPoundTimeStamp < Time.time)
         {
-            landTimer.Tick(Time.deltaTime);
+            canPound = true;
         }
         if (isFlying != wasFlying)
         {
@@ -94,9 +109,15 @@ public class Player : MonoBehaviour {
     {
         //Debug.Log("moving to " + targetLocation);
 
+        isFlying = true;
+        canJump = false;
+        var lastTile = this.Level.GetTileAt(Column, Row);
+        lastTile.OnTouchExit(this);
+        Level.ExplodeAt(lastTile, 0, 1);
+
         this.Column = (int)Mathf.Round(targetLocation.x);
         this.Row = (int)Mathf.Round(-targetLocation.z);
-        Debug.Log(string.Format("C:{0},R:{1}", this.Column, this.Row));
+        //Debug.Log(string.Format("C:{0},R:{1}", this.Column, this.Row));
 
         var thetaSpeed = Mathf.PI / this.movementTime;
         var distanceToTravel = (targetLocation - this.transform.localPosition);
@@ -113,9 +134,11 @@ public class Player : MonoBehaviour {
         }
 
         this.transform.localPosition = targetLocation;
-        yield return new WaitForSeconds(0.05f);
-        //landTimer.Reset();
         isFlying = false;
+        var nextTile = this.Level.GetTileAt(Column, Row);
+        nextTile.OnTouchEnter(this);
+        yield return new WaitForSeconds(0.35f);
+        canJump = true;
     }
     public void HandleInput(InputData inputData)
     {
@@ -129,41 +152,32 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        if (isFlying == false)
+        if (canJump)
         {
-            if(landTimer.IsTicking())
+            Vector3 movementVector = Vector3.zero;
+            if(inputData.HorizontalAxis != 0)
             {
-                
+                movementVector.x += inputData.HorizontalAxis;
             }
-            else
+            else if(inputData.VerticalAxis != 0)
             {
-                Vector3 movementVector = Vector3.zero;
-                if(inputData.HorizontalAxis != 0)
-                {
-                    movementVector.x += inputData.HorizontalAxis;
-                }
-                else if(inputData.VerticalAxis != 0)
-                {
-                    movementVector.z += inputData.VerticalAxis;
-                }
-                
-                if (movementVector.sqrMagnitude > 0.1 &&
-                    this.fireTimer <= 0 &&
-                    tileStateIsValidMove(transform.localPosition + movementVector))
-                {
-                    isFlying = true;
-                    this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
-                    System.Random r = new System.Random();
-                    int rInt = r.Next(0, 13);
-                    AudioManager.Instance.PlaySound(rInt);
-                }
+                movementVector.z += inputData.VerticalAxis;
             }
             
-            if(canShoot == true)
+            if (movementVector.sqrMagnitude > 0.1 &&
+                this.fireTimer <= 0 &&
+                tileStateIsValidMove(transform.localPosition + movementVector))
             {
-                this.FireWeapon(inputData.PrimaryIsDown);
+                this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
+                System.Random r = new System.Random();
+                int rInt = r.Next(0, 13);
+                AudioManager.Instance.PlaySound(rInt);
             }
-            
+        }
+        if(canShoot == true)
+        {
+            this.FireWeapon(inputData.PrimaryIsDown);
+            this.PoundWeapon(inputData.SecondaryIsDown, inputData.SecondaryWasDown && !inputData.SecondaryIsDown);
         }
     }
 
@@ -239,15 +253,27 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void HandleSurfaceChange(bool bIsBelowWater)
+    public void HandleSurfaceChange(bool bIsBelowWater, float tileHeight)
     {
         isFlying = false;
+        this.tileHeight = tileHeight;
+        if(!isPounding && !isFlying)
+        {
+            Vector3 nextPosition = this.transform.localPosition;
+            nextPosition.y = this.playerHeight + this.tileHeight;
+            this.transform.localPosition = nextPosition;
+        }
         if(bIsBelowWater)
         {
-            Level.MakeElectricity(this.transform.position);
-            // die
-            GameObject.Destroy(this.gameObject);
+            Die();
         }
+    }
+
+    public void Die()
+    {
+        Level.MakeElectricity(this.transform.position);
+        // die
+        GameObject.Destroy(this.gameObject);
     }
 
     public void HandleSurfaceRemove()
@@ -297,5 +323,34 @@ public class Player : MonoBehaviour {
         }
 
         return isValidMove;
+    }
+
+    void PoundWeapon(bool bIsDown, bool bIsReleased)
+    {
+        if(bIsReleased && isPounding)
+        {
+
+            isPounding = false;
+            var tile = this.Level.GetTileAt(Column, Row);
+            this.Level.ExplodeAt(tile, 1, 2, false);
+            canPound = false;
+            canPoundTimeStamp = Time.time + shotDelay;
+
+
+
+            Vector3 nextPosition = this.transform.localPosition;
+            nextPosition.y = this.playerHeight + this.tileHeight;
+            this.transform.localPosition = nextPosition;
+        }
+        if(bIsDown && canPound)
+        {
+            isPounding = true;
+            PoundFloatHeight += Time.deltaTime*0.2f;
+
+
+            Vector3 nextPosition = this.transform.localPosition;
+            nextPosition.y = this.playerHeight + this.tileHeight + this.PoundFloatHeight;
+            this.transform.localPosition = nextPosition;
+        }
     }
 }
