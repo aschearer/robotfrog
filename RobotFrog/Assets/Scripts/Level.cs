@@ -65,11 +65,11 @@ public class Level : MonoBehaviour {
         {
             case 0:
             // 8x5 with columns
-            Map.Add("_______W");
-            Map.Add("____W___");
-            Map.Add("___RB___");
-            Map.Add("___W____");
-            Map.Add("W_______");
+            Map.Add("_R____W_");
+            Map.Add("_R_BWB__");
+            Map.Add("________");
+            Map.Add("__BWB_R_");
+            Map.Add("_W____R_");
             MapAbove.Add("________");
             MapAbove.Add("_1____3_");
             MapAbove.Add("________");
@@ -100,6 +100,14 @@ public class Level : MonoBehaviour {
 
     public void Update()
     {
+        if(Input.GetKey(KeyCode.PageDown))
+        {
+            Time.timeScale = 0.2f;
+        }
+        if(Input.GetKey(KeyCode.PageUp))
+        {
+            Time.timeScale = 1.0f;
+        }
         switch(levelState)
         {
             case LevelState.None:

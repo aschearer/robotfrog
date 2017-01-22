@@ -109,8 +109,11 @@ public class TileFloating : Tile {
             {
                 IsFlipped = !IsFlipped;
                 State = IsFlipped ? FlippedState : DefaultState;
-                Platform.transform.localRotation =  Quaternion.Euler(IsFlipped ? 180f: 0f, 0f, 0f);
-                Platform.transform.localPosition = Vector3.up * (IsFlipped ? 0.95f : 0.01f);
+                if(Platform)
+                {
+                    Platform.transform.localRotation =  Quaternion.Euler(IsFlipped ? 180f: 0f, 0f, 0f);
+                    Platform.transform.localPosition = Vector3.up * (IsFlipped ? 0.95f : 0.01f);
+                }
             }
         }
     }
@@ -131,12 +134,35 @@ public class TileFloating : Tile {
 
     protected override void OnPlayerTouchingAdd(Player InPlayer)
     {
-        InPlayer.HandleSurfaceChange(Height < 0);
+        InPlayer.HandleSurfaceChange(IsSubmerged());
     }
 
     protected override void OnPlayerTouchingRemove(Player InPlayer)
     {
         InPlayer.HandleSurfaceRemove();
+    }
+
+    public bool IsSubmerged()
+    {
+
+        //bool bVeryHigh = Phase == ShockPhase.Quake && Height > 0;
+        bool bHigh = Height > 0;
+        bool bVeryLow = Phase == ShockPhase.Quake && Height < 0;
+        switch(State)
+        {
+            case TileState.Water:
+                return true;
+            case TileState.SinkingPad:
+            case TileState.Spike:
+                return bVeryLow;
+            case TileState.Rock:
+                return bHigh;
+            default:
+                break;
+        }
+        return false;
+
+
     }
 
     protected void HandleHeightChange()
@@ -145,25 +171,21 @@ public class TileFloating : Tile {
         float VerticalOffset = (float)Height/Steps*GetAmplitude();
         TilePosition.y = VerticalOffset;
         this.transform.position = TilePosition;
-        bool bVeryHigh = Phase == ShockPhase.Quake && Height > 0;
-        bool bVeryLow = Phase == ShockPhase.Quake && Height < 0;
-        switch(State)
+
+        if(Platform)
         {
-            case TileState.SinkingPad:
-            case TileState.Spike:
-                Platform.SetActive(!bVeryLow);
-                break;
-            case TileState.Rock:
-                Platform.SetActive(!bVeryHigh);
+            Platform.SetActive(!IsSubmerged());
+            if(State == TileState.Rock)
+            {
                 Platform.transform.localPosition = -Vector3.up*VerticalOffset;
-                break;
+            }
         }
 
         foreach(Player player in TouchingPlayers)
         {
             if (player)
             {
-                player.HandleSurfaceChange(!bVeryLow);
+                player.HandleSurfaceChange(IsSubmerged());
             }
         }
     }
