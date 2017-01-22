@@ -46,6 +46,7 @@ public class Level : MonoBehaviour {
     private List<Player> players = new List<Player>();
     
     private ManualTimer SpawnTimer = new ManualTimer();
+    private float targetCameraSize;
 
     public void Start()
     {
@@ -97,10 +98,20 @@ public class Level : MonoBehaviour {
             MapAbove.Add("______2_");
             break;
         }
+
+        this.targetCameraSize = Camera.main.orthographicSize;
+        Camera.main.orthographicSize = this.targetCameraSize * 2;
     }
 
     public void Update()
     {
+        if (Level.levelState == LevelState.WaitingToSpawn && this.players.Count == 0)
+        {
+            var angles = this.transform.localEulerAngles;
+            angles.y += Time.deltaTime * Mathf.PI * 8;
+            this.transform.localEulerAngles = angles;
+        }
+
         if(Input.GetKey(KeyCode.PageDown))
         {
             Time.timeScale = 0.2f;
@@ -332,6 +343,7 @@ public class Level : MonoBehaviour {
             Position.y += 1;
             GameObject player = Instantiate(Prefab, Vector3.zero, Rotation, this.Container);
             player.transform.localPosition = Position;
+            player.transform.localEulerAngles = Vector3.zero;
             player.name = "Player"+spawnSlot;
             var playerView = player.GetComponent<Player>();
             playerView.Level = this;
@@ -359,7 +371,33 @@ public class Level : MonoBehaviour {
                 var prompt = promptGameObject.GetComponent<CanvasGroup>();
                 this.StartCoroutine(this.Fade(prompt));
             }
+
+            if (players.Count == 1)
+            {
+                this.StartCoroutine(this.AnimateToPlaying());
+            }
         }
+    }
+
+    private IEnumerator AnimateToPlaying()
+    {
+        var runTime = 0.5f;
+        var angles = this.transform.localEulerAngles;
+        var angleDistance = angles.y;
+        var orthoDistance = Camera.main.orthographicSize;
+        for (float t = 0; t < runTime; t += Time.deltaTime)
+        {
+            var p = t / runTime;
+
+            angles.y = Mathf.Lerp(angleDistance, 0, p);
+            this.transform.localEulerAngles = angles;
+
+            Camera.main.orthographicSize = Mathf.Lerp(orthoDistance, this.targetCameraSize, p);
+
+            yield return null;
+        }
+
+        this.transform.localEulerAngles = Vector3.zero;
     }
 
     private IEnumerator Fade(CanvasGroup prompt)
