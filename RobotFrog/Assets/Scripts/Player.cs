@@ -116,7 +116,7 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        if (isFlying == false && this.fireTimer <= 0)
+        if (isFlying == false)
         {
             if(landTimer.IsTicking())
             {
@@ -135,7 +135,9 @@ public class Player : MonoBehaviour {
                     movementVector.z += inputData.VerticalAxis;
                 }
                 
-                if (tileStateIsValidMove(transform.localPosition + movementVector) && movementVector.sqrMagnitude > 0.1)
+                if (tileStateIsValidMove(transform.localPosition + movementVector) && 
+                    movementVector.sqrMagnitude > 0.1 &&
+                    this.fireTimer <= 0)
                 {
                     isFlying = true;
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
