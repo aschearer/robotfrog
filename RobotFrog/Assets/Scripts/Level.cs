@@ -167,7 +167,7 @@ public class Level : MonoBehaviour {
 
         for (float t = 0; t < 1; t += Time.deltaTime)
         {
-            twirl.angle = 180 * (1 - t);
+            twirl.angle = 180 + 180 * t;
             yield return null;
         }
 
