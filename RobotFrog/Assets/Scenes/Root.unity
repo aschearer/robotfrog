@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 229473186}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.5748171, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -197,7 +197,8 @@ Prefab:
         type: 2}
       propertyPath: SplashExplodeProto
       value: 
-      objectReference: {fileID: 100000, guid: aae81d461824b924bb1c9d005f0f5904, type: 3}
+      objectReference: {fileID: 1199207680879562, guid: f1d91e99226d3f4438d67661bafca764,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a0b749029b64a03428496e947b6534b9, type: 2}
   m_IsPrefabParent: 0

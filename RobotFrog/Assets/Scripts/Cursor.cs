@@ -22,11 +22,22 @@ public class Cursor : MonoBehaviour {
             cube.transform.localPosition = Vector3.forward*(i+1) - Vector3.up*0.40f;
             cube.name = "Cube"+i;
             cube.SetActive(false);
+            
             Cubes.Add(cube);
         }
         CubeProto.SetActive(false);
         Bullseye.SetActive(false);
+        ApplyTint();
 
+    }
+
+    public void ApplyTint()
+    {
+        for(int i=0; i<Cubes.Count; ++i)
+        {
+            Cubes[i].GetComponent<Renderer>().material.color = Tint;
+        }
+        Bullseye.GetComponent<Renderer>().material.color = Tint;
     }
 
 

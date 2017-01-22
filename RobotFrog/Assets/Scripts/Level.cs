@@ -27,6 +27,8 @@ public class Level : MonoBehaviour {
     public GameObject CursorProto;
     public GameObject ZapExplodeProto;
     public GameObject SplashExplodeProto;
+    public Material CommonMain;
+    public Material CommonAlt;
 
     public Transform Container;
 
@@ -43,7 +45,7 @@ public class Level : MonoBehaviour {
 
     public void Start()
     {
-        SpawnTimer.SetTime(10.0f);
+        SpawnTimer.SetTime(Globals.WarmupTime);
         for(int i=0; i<6; ++i)
         {
             GameObject controllerGO = new GameObject();
@@ -142,12 +144,17 @@ public class Level : MonoBehaviour {
                         if(!controllers[i].Pawn)
                         {
                             int spawnSlot = PlayerCount();
-                            SpawnPlayer(spawnSlot, i);   
+                            SpawnPlayer(spawnSlot, i);
+                            // temp, launch the game when we hit two   
+                            if(PlayerCount() >= 2)
+                            {
+                                SpawnTimer.Tick(99.0f);
+                            }
                         }
                         else
                         {
-                            // double tick
-                            SpawnTimer.Tick(Time.deltaTime*2);
+                            // quadruple tick
+                            SpawnTimer.Tick(Time.deltaTime*4.0f);
                         }
                     }
                 }
@@ -334,6 +341,9 @@ public class Level : MonoBehaviour {
             var playerView = player.GetComponent<Player>();
             playerView.Level = this;
             playerView.Tint = Tint;
+            bool bUseAltMat = UnityEngine.Random.value > 0.5f ;
+            playerView.flyingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
+            playerView.sittingModel.GetComponent<Renderer>().material = bUseAltMat ? CommonAlt : CommonMain;
             controllers[controller].Pawn = playerView;
 
             GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);

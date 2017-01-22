@@ -95,5 +95,10 @@ MonoBehaviour:
     type: 2}
   ZapExplodeProto: {fileID: 1199207680879562, guid: e2adf85c5bafae0419c1b3a1557921a0,
     type: 2}
+  SplashExplodeProto: {fileID: 1199207680879562, guid: f1d91e99226d3f4438d67661bafca764,
+    type: 2}
+  CommonMain: {fileID: 0}
+  CommonAlt: {fileID: 0}
   Container: {fileID: 4791867351989844}
   Map: []
+  MapAbove: []

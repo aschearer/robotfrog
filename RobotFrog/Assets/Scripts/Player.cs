@@ -27,11 +27,9 @@ public class Player : MonoBehaviour {
 
     private float fireTimer;
 
-    [SerializeField]
-    private GameObject flyingModel;
+    public GameObject flyingModel;
 
-    [SerializeField]
-    private GameObject sittingModel;
+    public GameObject sittingModel;
 
     [SerializeField]
     private bool isFlying = false;
