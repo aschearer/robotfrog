@@ -55,20 +55,15 @@ public class Player : MonoBehaviour {
     
     void Update ()
     {
-<<<<<<< HEAD
         //if the check passes IE. no obstacles player moves
         float horizontal = 0;
         float vertical = 0;
-=======
+
         if (Level.IsGameOver)
         {
             return;
         }
 
-        float horizontal = Input.GetAxis(this.horizontalAxisName);
-        float vertical = Input.GetAxis(this.verticalAxisName);
-
->>>>>>> origin/master
         Vector3 movementVector = Vector3.zero;
         if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0 && moveValid("right") == true)
         {
