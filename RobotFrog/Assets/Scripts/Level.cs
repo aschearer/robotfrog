@@ -24,6 +24,8 @@ public class Level : MonoBehaviour {
 
     private List<Tile> tiles = new List<Tile>();
 
+    private List<Player> players = new List<Player>();
+
     public void Start()
     {
         if(Map.Count == 0)
@@ -205,8 +207,24 @@ public class Level : MonoBehaviour {
         return null;
     }
 
+    internal Player GetPlayerAt(int column, int row)
+    {
+        foreach (var player in this.players)
+        {
+            if (player != null && player.Column == column && player.Row == row)
+            {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     public void MakeLevel(List<string> Map)
     {
+        this.players.Clear();
+        this.tiles.Clear();
+
         this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
         int numberOfColumns = 0;
@@ -267,7 +285,9 @@ public class Level : MonoBehaviour {
                     playerView.playerId = controllerId;
                     playerView.Level = this;
                     playerView.Tint = Tint;
-
+                    playerView.Column = column;
+                    playerView.Row = row;
+                    this.players.Add(playerView);
 
                     GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);
                     cursor.transform.SetParent(player.transform, false);

@@ -43,6 +43,8 @@ public class Player : MonoBehaviour {
     internal Color Tint { get; set; }
 
     internal Cursor Cursor { get; set; }
+    public int Column { get; internal set; }
+    public int Row { get; internal set; }
 
     void Start () {
         this.horizontalAxisName = "Horizontal-" + this.playerId;
@@ -105,7 +107,10 @@ public class Player : MonoBehaviour {
                 movementVector.z = 0;
             }
 
-            this.transform.position = this.transform.position + movementVector;
+            this.transform.localPosition = this.transform.localPosition + movementVector;
+            this.Column = (int)Mathf.Round(this.transform.localPosition.x);
+            this.Row = -(int)Mathf.Round(this.transform.localPosition.z);
+            Debug.Log(string.Format("Updated column, row: {0},{1}", this.Column, this.Row));
         }
 
         this.FireWeapon();
@@ -131,7 +136,6 @@ public class Player : MonoBehaviour {
             this.Cursor.ShowLine(-1);
             var column = (int)Mathf.Round(this.transform.localPosition.x);
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
-
 
             var heading = this.Heading.ToEulerAngles();
             var distance = new Vector3(
@@ -247,15 +251,27 @@ public class Player : MonoBehaviour {
 
         Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
 
+        bool isValidMove = false;
         TileState state = tile.State;
         switch (state)
         {
             case TileState.SinkingPad:
             case TileState.FloatingBox:
             case TileState.Rock:
-                return true;
+                isValidMove = true;
+                break;
             default:
-                return false;
+                isValidMove = false;
+                break;
         }
+
+        if (isValidMove)
+        {
+            // Valid tile, but is it occupied?
+            var player = Level.GetPlayerAt(column, row);
+            isValidMove = player == null;
+        }
+
+        return isValidMove;
     }
 }
