@@ -43,6 +43,10 @@ public class Player : MonoBehaviour {
 
     internal Level Level { get; set; }
 
+    internal Color Tint { get; set; }
+
+    internal Cursor Cursor { get; set; }
+
     void Start () {
         this.horizontalAxisName = "Horizontal-" + this.playerId;
         this.verticalAxisName = "Vertical-" + this.playerId;
@@ -51,9 +55,20 @@ public class Player : MonoBehaviour {
     
     void Update ()
     {
+<<<<<<< HEAD
         //if the check passes IE. no obstacles player moves
         float horizontal = 0;
         float vertical = 0;
+=======
+        if (Level.IsGameOver)
+        {
+            return;
+        }
+
+        float horizontal = Input.GetAxis(this.horizontalAxisName);
+        float vertical = Input.GetAxis(this.verticalAxisName);
+
+>>>>>>> origin/master
         Vector3 movementVector = Vector3.zero;
         if (Input.GetButtonDown(this.horizontalAxisName) && Input.GetAxis(this.horizontalAxisName) > 0 && moveValid("right") == true)
         {
@@ -95,9 +110,12 @@ public class Player : MonoBehaviour {
         if (Input.GetButton(this.fireAxisName))
         {
             this.fireTimer += Time.deltaTime * 2f;
+            this.Cursor.ShowLine(2);
         }
         else if (this.fireTimer > 0)
         {
+
+            this.Cursor.ShowLine(-1);
             var column = (int)Mathf.Round(this.transform.localPosition.x);
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
 
@@ -161,9 +179,7 @@ public class Player : MonoBehaviour {
         if(bIsBelowWater)
         {
             // die
-            this.transform.localScale = 0.1f*Vector3.one;
-
-            this.StartCoroutine(this.Respawn());
+            GameObject.Destroy(this.gameObject);
         }
     }
 

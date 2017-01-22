@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
+using UnityStandardAssets.ImageEffects;
 
 public class Level : MonoBehaviour {
-    
+
+    public static bool IsGameOver;
+
     public GameObject TileBarrier;
     public GameObject TileFloating;
     public GameObject TileWater;
     public GameObject TileBox;
     public GameObject TileRock;
     public GameObject Player;
+    public GameObject CursorProto;
 
     public Transform Container;
 
@@ -60,20 +65,51 @@ public class Level : MonoBehaviour {
             ////Map.Add("X________X");
             ////Map.Add("XXXXXXXXXX");
 
+            ////// 10x7 with columns
+            ////Map.Add("XXXXXXXXXX");
+            ////Map.Add("X_______WX");
+            ////Map.Add("X_1__W___X");
+            ////Map.Add("X___RB___X");
+            ////Map.Add("X___W__2_X");
+            ////Map.Add("XW_______X");
+            ////Map.Add("XXXXXXXXXX");
+
             // 10x7 with columns
-            Map.Add("XXXXXXXXXX");
-            Map.Add("X_______WX");
-            Map.Add("X_1__W___X");
-            Map.Add("X___RB___X");
-            Map.Add("X___W__2_X");
-            Map.Add("XW_______X");
-            Map.Add("XXXXXXXXXX");
+            Map.Add("_______W");
+            Map.Add("_1__W___");
+            Map.Add("___RB___");
+            Map.Add("___W__2_");
+            Map.Add("W_______");
         }
         MakeLevel(Map);
     }
 
     public void Update()
     {
+        // Test for end-game condition
+        int playerCount = 0;
+        for (int i = 0; i < this.Container.childCount; i++)
+        {
+            var child = this.Container.GetChild(i);
+            var player = child.GetComponent<Player>();
+            if (player)
+            {
+                playerCount++;
+            }
+
+            if (playerCount == 2)
+            {
+                break;
+            }
+        }
+
+        if (playerCount < 2 && !Level.IsGameOver)
+        {
+            // Game is over
+            Level.IsGameOver = true;
+            this.StartCoroutine(this.GameOverSequence());
+        }
+
         // Test code to trigger explosions via mouse
         ////if (Input.GetMouseButtonDown(0))
         ////{
@@ -88,6 +124,53 @@ public class Level : MonoBehaviour {
         ////        }
         ////    }
         ////}
+    }
+
+    private IEnumerator GameOverSequence()
+    {
+        var position = this.transform.localPosition;
+        for (float t = 0; t < 1; t += Time.deltaTime * 5)
+        {
+            var shakenPosition = position;
+            shakenPosition.x = UnityEngine.Random.Range(-0.1f, 0.1f);
+            shakenPosition.y = UnityEngine.Random.Range(-0.1f, 0.1f);
+            this.transform.localPosition = shakenPosition;
+            yield return null;
+        }
+
+        this.transform.localPosition = position;
+
+        yield return new WaitForSeconds(0.5f);
+
+        var twirl = Camera.main.GetComponent<Twirl>();
+        twirl.angle = 0;
+        twirl.enabled = true;
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            twirl.angle = 180 * t;
+            yield return null;
+        }
+
+        // Step 1 destroy all things
+        for (int i = 0; i < this.Container.childCount; i++)
+        {
+            var child = this.Container.GetChild(i);
+            GameObject.Destroy(child.gameObject);
+        }
+
+        // Step 2 create all things
+        this.MakeLevel(this.Map);
+
+        for (float t = 0; t < 1; t += Time.deltaTime)
+        {
+            twirl.angle = 180 * (1 - t);
+            yield return null;
+        }
+
+        twirl.angle = 0;
+        twirl.enabled = false;
+
+        Level.IsGameOver = false;
     }
 
     public void ExplodeAt(Tile tile, int radius)
@@ -122,6 +205,7 @@ public class Level : MonoBehaviour {
 
     public void MakeLevel(List<string> Map)
     {
+        this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
         int numberOfColumns = 0;
         for(int row=0; row<Map.Count; ++row)
@@ -134,6 +218,7 @@ public class Level : MonoBehaviour {
                 Quaternion Rotation = Quaternion.identity;
                 GameObject Prefab = null;
                 string name = string.Empty;
+                Color Tint = Color.white;
                 switch(tiles[column])
                 {
                     default: break;
@@ -170,10 +255,12 @@ public class Level : MonoBehaviour {
                     {
                         case '1':
                             name = "Player1";
+                            Tint = Color.red;
                             break;
                         case '2':
                             name = "Player2";
                             controllerId = ControllerId.KeyboardRight;
+                            Tint = Color.blue;
                             break;
                     }
 
@@ -183,6 +270,15 @@ public class Level : MonoBehaviour {
                     var playerView = player.GetComponent<Player>();
                     playerView.playerId = controllerId;
                     playerView.Level = this;
+                    playerView.Tint = Tint;
+
+
+                    GameObject cursor = Instantiate(CursorProto, Vector3.zero, Quaternion.identity);
+                    cursor.transform.SetParent(player.transform, false);
+                    var cursorView = cursor.GetComponent<Cursor>();
+                    cursorView.Tint = Tint;
+
+                    playerView.Cursor = cursorView;
                 }
 
                 if (this.tiles[this.tiles.Count - 1] != null)
@@ -196,7 +292,7 @@ public class Level : MonoBehaviour {
 
         if (numberOfColumns > 0)
         {
-            var containerPosition = this.Container.transform.localPosition;
+            var containerPosition = Vector3.zero;
             containerPosition.x = -((numberOfColumns - 1) / 2f);
             this.Container.transform.localPosition = containerPosition;
         }
