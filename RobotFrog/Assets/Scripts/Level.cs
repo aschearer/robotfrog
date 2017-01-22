@@ -49,6 +49,7 @@ public class Level : MonoBehaviour {
     
     private ManualTimer SpawnTimer = new ManualTimer();
     private float targetCameraSize;
+    private Vector3 targetCameraPosition;
 
     public void Start()
     {
@@ -104,6 +105,8 @@ public class Level : MonoBehaviour {
 
         this.targetCameraSize = Camera.main.orthographicSize;
         Camera.main.orthographicSize = this.targetCameraSize * 2;
+        this.targetCameraPosition = Camera.main.transform.localPosition;
+        Camera.main.transform.localPosition += new Vector3(0, 3);
     }
 
     public void Update()
@@ -412,10 +415,17 @@ public class Level : MonoBehaviour {
 
     private IEnumerator AnimateToPlaying()
     {
+        var title = GameObject.Find("Title");
+        if (title)
+        {
+            GameObject.Destroy(title.gameObject);
+        }
+
         var runTime = 0.5f;
         var angles = this.transform.localEulerAngles;
         var angleDistance = angles.y;
         var orthoDistance = Camera.main.orthographicSize;
+        var startPosition = Camera.main.transform.localPosition;
         for (float t = 0; t < runTime; t += Time.deltaTime)
         {
             var p = t / runTime;
@@ -424,6 +434,7 @@ public class Level : MonoBehaviour {
             this.transform.localEulerAngles = angles;
 
             Camera.main.orthographicSize = Mathf.Lerp(orthoDistance, this.targetCameraSize, p);
+            Camera.main.transform.localPosition = Vector3.Lerp(startPosition, this.targetCameraPosition, p);
 
             yield return null;
         }
