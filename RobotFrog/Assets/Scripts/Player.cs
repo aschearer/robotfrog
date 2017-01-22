@@ -57,7 +57,7 @@ public class Player : MonoBehaviour {
     public int Row { get; internal set; }
 
     void Start () {
-        landTimer.SetTime(0.45f);
+        ////landTimer.SetTime(0.45f);
         landTimer.IsLooping = false;
         canShootTimeStamp = Time.time;
     }
@@ -77,7 +77,6 @@ public class Player : MonoBehaviour {
 
         if(canShootTimeStamp < Time.time)
         {
-            Debug.Log("can shoot");
             canShoot = true;
         }
 
@@ -101,7 +100,8 @@ public class Player : MonoBehaviour {
         }
 
         this.transform.localPosition = targetLocation;
-        landTimer.Reset();
+        yield return new WaitForSeconds(0.05f);
+        //landTimer.Reset();
         isFlying = false;
     }
     public void HandleInput(InputData inputData)
@@ -125,7 +125,6 @@ public class Player : MonoBehaviour {
             else
             {
                 Vector3 movementVector = Vector3.zero;
-
                 if(inputData.HorizontalAxis != 0)
                 {
                     movementVector.x += inputData.HorizontalAxis;
