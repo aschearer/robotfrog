@@ -438,8 +438,10 @@ public class Level : MonoBehaviour {
                 Vector3 Position = this.Container.localPosition + new Vector3(0.25f + column*TileRadius, 0.5f, -row*TileRadius);
                 Quaternion Rotation = Quaternion.identity;
                 Position.x -= 2;
-                if(row == -1 || row == Map.Count)
+                if(row == -1 || row == Map.Count ||
+                    column == -1 || column == numberOfColumns)
                 {
+                    Position.y += 0.25f;
                     GameObject DecoWall = Instantiate(DecoWallProto, Position, Rotation, this.Container);
                     DecoWall.name = "DecoWall" + row + "," + column;
                 }
