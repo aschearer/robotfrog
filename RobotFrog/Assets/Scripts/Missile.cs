@@ -19,6 +19,16 @@ public class Missile : MonoBehaviour
     [SerializeField]
     private float arcHeight;
 
+
+    [SerializeField]
+    private GameObject normalModel;
+
+    [SerializeField]
+    private GameObject shrinkModel;
+
+    [SerializeField]
+    private GameObject explodeModel;
+
     // Use this for initialization
     void Start()
     {
@@ -44,6 +54,14 @@ public class Missile : MonoBehaviour
             delta.y = y * this.arcHeight;
             this.transform.localPosition = basePosition + delta;
 
+            if(t > 0.3*this.lifespan && t < 0.6*this.lifespan)
+            {
+                SetPhase(1);
+            }
+            else
+            {
+                SetPhase(0);
+            }
             yield return null;
         }
 
@@ -52,6 +70,8 @@ public class Missile : MonoBehaviour
         var position = this.transform.localPosition;
         while (position.y > -0.5f)
         {
+
+            SetPhase(2);
             position.y -= 2f * Time.deltaTime;
             this.transform.localPosition = position;
             yield return null;
@@ -61,8 +81,17 @@ public class Missile : MonoBehaviour
         this.CommitSuicide();
     }
 
+    private void SetPhase(int phase)
+    {
+
+        normalModel.SetActive(phase == 0);
+        shrinkModel.SetActive(phase == 1);
+        explodeModel.SetActive(phase == 2);
+    }
+
     private void CommitSuicide()
     {
+        Level.MakeSplash(this.transform.position);
         GameObject.Destroy(this.gameObject);
     }
 

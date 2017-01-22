@@ -91,36 +91,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &6730721
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1596626629293014, guid: a0b749029b64a03428496e947b6534b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 577600976}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 6730722}
-  m_Layer: 0
-  m_Name: Container
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6730722
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4791867351989844, guid: a0b749029b64a03428496e947b6534b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 577600976}
-  m_GameObject: {fileID: 6730721}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1256379582}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &229473185
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,9 +193,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114528087739385302, guid: a0b749029b64a03428496e947b6534b9,
+        type: 2}
+      propertyPath: SplashExplodeProto
+      value: 
+      objectReference: {fileID: 1199207680879562, guid: f1d91e99226d3f4438d67661bafca764,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a0b749029b64a03428496e947b6534b9, type: 2}
-  m_RootGameObject: {fileID: 1256379580}
   m_IsPrefabParent: 0
 --- !u!1 &1220170141
 GameObject:
@@ -375,64 +350,3 @@ MonoBehaviour:
   m_MinZ: 0.01
   m_SSAOShader: {fileID: 4800000, guid: 43ca18288c424f645aaa1e9e07f04c50, type: 3}
   m_RandomTexture: {fileID: 2800000, guid: a181ca8e3c62f3e4b8f183f6c586b032, type: 3}
---- !u!1 &1256379580
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1207731312174864, guid: a0b749029b64a03428496e947b6534b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 577600976}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1256379582}
-  - component: {fileID: 1256379581}
-  m_Layer: 0
-  m_Name: Level
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1256379581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114528087739385302, guid: a0b749029b64a03428496e947b6534b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 577600976}
-  m_GameObject: {fileID: 1256379580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d271ff564669b104695b95f80abcab67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TileBarrier: {fileID: 1555264021768636, guid: d2d72c48788e574489f90564ede5ad40,
-    type: 2}
-  TileFloating: {fileID: 1065305165739622, guid: 7f8655786b11e654fbf4b0ab10b6cc92,
-    type: 2}
-  TileWater: {fileID: 1166957586918412, guid: 3f79a920f1b031a4e854e8d20c0b7ecf, type: 2}
-  TileBox: {fileID: 1856819695518480, guid: 07de6dfd24c9f1d4581458046437af92, type: 2}
-  TileRock: {fileID: 1959686907088888, guid: fd857087a68853146b9087f17922c72f, type: 2}
-  PlayerMainProto: {fileID: 1927325106794218, guid: a4843b48973984b4aa27f28294beb1ec,
-    type: 2}
-  PlayerAltProto: {fileID: 1927325106794218, guid: e98b0df55b6c01941a1b9ae8eb031509,
-    type: 2}
-  CursorProto: {fileID: 1462448348924664, guid: 24a0a58c00b8938458e0bedef88b1d58,
-    type: 2}
-  ZapExplodeProto: {fileID: 1199207680879562, guid: e2adf85c5bafae0419c1b3a1557921a0,
-    type: 2}
-  Container: {fileID: 6730722}
-  Map: []
---- !u!4 &1256379582
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4778017396139734, guid: a0b749029b64a03428496e947b6534b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 577600976}
-  m_GameObject: {fileID: 1256379580}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 6730722}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

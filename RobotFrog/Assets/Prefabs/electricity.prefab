@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4546653529484634}
   - component: {fileID: 33339104162466386}
   - component: {fileID: 23103241171569540}
+  - component: {fileID: 114554374994029620}
   m_Layer: 0
   m_Name: electricity
   m_TagString: Untagged
@@ -79,3 +80,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1199207680879562}
   m_Mesh: {fileID: 4300000, guid: accfa3d501922b74390196bab8f14cce, type: 3}
+--- !u!114 &114554374994029620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1199207680879562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86fba204a7dffb44084375dfb2651e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Duration: 0.6

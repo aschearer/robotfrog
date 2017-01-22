@@ -146,7 +146,7 @@ public class TileFloating : Tile {
         TilePosition.y = VerticalOffset;
         this.transform.position = TilePosition;
         bool bVeryHigh = Phase == ShockPhase.Quake && Height > 0;
-        bool bVeryLow = Phase == ShockPhase.Quake && Height > 0;
+        bool bVeryLow = Phase == ShockPhase.Quake && Height < 0;
         switch(State)
         {
             case TileState.SinkingPad:

@@ -26,6 +26,7 @@ public class Level : MonoBehaviour {
     public GameObject PlayerAltProto;
     public GameObject CursorProto;
     public GameObject ZapExplodeProto;
+    public GameObject SplashExplodeProto;
 
     public Transform Container;
 
@@ -130,7 +131,7 @@ public class Level : MonoBehaviour {
                     int spawnSlot = PlayerCount();
                     for(int i=spawnSlot; i<2; ++i)
                     {
-                        SpawnPlayer(spawnSlot, i);
+                        SpawnPlayer(i, i);
                     }
                     levelState = LevelState.Playing;
                 }
@@ -355,6 +356,18 @@ public class Level : MonoBehaviour {
         }
 
         return null;
+    }
+
+    public void MakeElectricity(Vector3 pos)
+    {
+        Instantiate(ZapExplodeProto, pos - Vector3.up*0.5f, Quaternion.identity);
+        
+    }
+
+    public void MakeSplash(Vector3 pos)
+    {
+        Instantiate(SplashExplodeProto, pos - Vector3.up*1.5f, Quaternion.identity);
+        
     }
 
     public void MakeLevel(List<string> Map)

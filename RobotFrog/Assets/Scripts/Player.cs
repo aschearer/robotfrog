@@ -169,6 +169,7 @@ public class Player : MonoBehaviour {
         isFlying = false;
         if(bIsBelowWater)
         {
+            Level.MakeElectricity(this.transform.position);
             // die
             GameObject.Destroy(this.gameObject);
         }
