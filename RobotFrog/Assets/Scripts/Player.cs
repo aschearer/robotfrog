@@ -59,7 +59,7 @@ public class Player : MonoBehaviour {
     void Start () {
         ////landTimer.SetTime(0.45f);
         landTimer.IsLooping = false;
-        canShootTimeStamp = Time.time;
+        canShootTimeStamp = Time.time + 0.25f;
     }
     
     void Update ()
