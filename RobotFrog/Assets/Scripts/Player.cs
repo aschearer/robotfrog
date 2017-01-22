@@ -113,7 +113,10 @@ public class Player : MonoBehaviour {
         canJump = false;
         var lastTile = this.Level.GetTileAt(Column, Row);
         lastTile.OnTouchExit(this);
-        Level.ExplodeAt(lastTile, 0, 1);
+        if(lastTile.State == TileState.SinkingPad)
+        {
+            Level.ExplodeAt(lastTile, 0, 1);
+        }
 
         this.Column = (int)Mathf.Round(targetLocation.x);
         this.Row = (int)Mathf.Round(-targetLocation.z);
@@ -332,7 +335,8 @@ public class Player : MonoBehaviour {
 
             isPounding = false;
             var tile = this.Level.GetTileAt(Column, Row);
-            this.Level.ExplodeAt(tile, 1, 2, false);
+            int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
+            this.Level.ExplodeAt(tile, 1, Magnitude, false);
             canPound = false;
             canPoundTimeStamp = Time.time + shotDelay;
 
@@ -341,6 +345,7 @@ public class Player : MonoBehaviour {
             Vector3 nextPosition = this.transform.localPosition;
             nextPosition.y = this.playerHeight + this.tileHeight;
             this.transform.localPosition = nextPosition;
+            PoundFloatHeight = 0.0f;
         }
         if(bIsDown && canPound)
         {
