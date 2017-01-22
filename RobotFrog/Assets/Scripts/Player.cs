@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float arcHeight = 0.40f;
 
-    private bool canShoot = true;
+    private bool canShoot = false;
 
     [SerializeField]
     private float shotDelay = .00001f;
@@ -59,6 +59,7 @@ public class Player : MonoBehaviour {
     void Start () {
         ////landTimer.SetTime(0.45f);
         landTimer.IsLooping = false;
+        canShoot = false;
         canShootTimeStamp = Time.time + 0.25f;
     }
     
