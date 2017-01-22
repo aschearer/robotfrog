@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4641299970001740}
   - component: {fileID: 33991045979597594}
   - component: {fileID: 23194805801118350}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Cube0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4686045164223156}
   - component: {fileID: 33096898434524856}
   - component: {fileID: 23998565193440794}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Bullseye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4227160585707134}
   - component: {fileID: 114784925785076918}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
