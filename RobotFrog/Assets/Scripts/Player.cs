@@ -116,7 +116,7 @@ public class Player : MonoBehaviour {
         {
             return;
         }
-        if (isFlying == false)
+        if (isFlying == false && this.fireTimer <= 0)
         {
             if(landTimer.IsTicking())
             {
