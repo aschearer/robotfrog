@@ -20,6 +20,12 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float arcHeight = 0.40f;
 
+    private bool canShoot = true;
+
+    [SerializeField]
+    private float shotDelay = .00001f;
+
+    private float canShootTimeStamp  = 0;
 
     private string horizontalAxisName;
 
@@ -53,6 +59,7 @@ public class Player : MonoBehaviour {
     void Start () {
         landTimer.SetTime(0.45f);
         landTimer.IsLooping = false;
+        canShootTimeStamp = Time.time;
     }
     
     void Update ()
@@ -67,6 +74,13 @@ public class Player : MonoBehaviour {
             flyingModel.SetActive(isFlying);
             sittingModel.SetActive(!isFlying);
         }
+
+        if(canShootTimeStamp < Time.time)
+        {
+            Debug.Log("can shoot");
+            canShoot = true;
+        }
+
     }
     IEnumerator jumpAnimation(Vector3 targetLocation)
     {
@@ -112,16 +126,29 @@ public class Player : MonoBehaviour {
             {
                 Vector3 movementVector = Vector3.zero;
 
-                movementVector.x += inputData.HorizontalAxis;
-                movementVector.z += inputData.VerticalAxis;
+                if(inputData.HorizontalAxis != 0)
+                {
+                    movementVector.x += inputData.HorizontalAxis;
+                }
+                else if(inputData.VerticalAxis != 0)
+                {
+                    movementVector.z += inputData.VerticalAxis;
+                }
+                
                 if (tileStateIsValidMove(transform.localPosition + movementVector) && movementVector.sqrMagnitude > 0.1)
                 {
                     isFlying = true;
                     this.StartCoroutine(jumpAnimation(movementVector + this.transform.localPosition));
                 }
             }
+            
+            if(canShoot == true)
+            {
+                this.FireWeapon(inputData.PrimaryIsDown);
+            }
+            
         }
-        this.FireWeapon(inputData.PrimaryIsDown);
+        
 
     }
 
@@ -156,6 +183,9 @@ public class Player : MonoBehaviour {
             missileView.Owner = this;
             missileView.Level = this.Level;
             missileView.Target = new Vector3(targetColumn, 0, -targetRow);
+            canShoot = false;
+            canShootTimeStamp = Time.time + shotDelay;
+            Debug.Log("shot fired: " + Time.time + "can shoot next -> " + canShootTimeStamp);
             this.fireTimer = 0;
         }
     }
