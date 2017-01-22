@@ -381,8 +381,7 @@ public class Player : MonoBehaviour {
                 PoundFloatHeight = 0.0f;
 
                 var tile = this.Level.GetTileAt(Column, Row);
-                int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
-                this.Level.ExplodeAt(tile, 1+Strength, Magnitude, false);
+                this.Level.ExplodeAt(tile, 1+Strength, 2, false);
                 canPound = false;
                 canPoundTimeStamp = Time.time + shotDelay;
                 this.Cursor.ShowLine(-1);
