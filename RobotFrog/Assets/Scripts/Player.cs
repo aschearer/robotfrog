@@ -33,6 +33,8 @@ public class Player : MonoBehaviour {
 
     private float fireTimer;
 
+    private int fireRange;
+
     public GameObject flyingModel;
 
     public GameObject sittingModel;
@@ -165,8 +167,9 @@ public class Player : MonoBehaviour {
     {
         if (isFiring)
         {
-            this.fireTimer += Time.deltaTime * 2f;
-            this.Cursor.ShowLine(2);
+            this.fireTimer += Time.deltaTime;
+            this.fireRange = this.fireTimer - Mathf.Floor(this.fireTimer) > 0.5f ? 2 : 3;
+            this.Cursor.ShowLine(fireRange);
         }
         else if (this.fireTimer > 0)
         {
@@ -176,10 +179,11 @@ public class Player : MonoBehaviour {
             var row = (int)-Mathf.Round(this.transform.localPosition.z);
 
             var heading = this.Heading.ToEulerAngles();
+            int distanceTiles = 1 + fireRange;
             var distance = new Vector3(
-                (int)(3 * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
+                (int)(distanceTiles * Mathf.Sin(heading.y * Mathf.Deg2Rad)),
                 0,
-                (int)(3 * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
+                (int)(distanceTiles * Mathf.Cos(heading.y * Mathf.Deg2Rad)));
 
             var targetColumn = column + distance.x;
             var targetRow = row - distance.z;
