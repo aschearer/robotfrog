@@ -114,7 +114,6 @@ public class Level : MonoBehaviour {
             MapAbove.Add("______2_");
             MapAbove.Add("________");
         }
-        MakeLevel(Map);
     }
 
     public void Update()
@@ -137,13 +136,17 @@ public class Level : MonoBehaviour {
                 }
                 for(int i=0; i<6; ++i)
                 {
-                    if(!controllers[i].Pawn && controllers[i].inputData.PrimaryIsDown)
+                    if(controllers[i].inputData.PrimaryIsDown)
                     {
-                        int spawnSlot = PlayerCount();
-                        SpawnPlayer(spawnSlot, i);
-                        if(spawnSlot > 0)
+                        if(!controllers[i].Pawn)
                         {
-                            SpawnTimer.Tick(5.0f);
+                            int spawnSlot = PlayerCount();
+                            SpawnPlayer(spawnSlot, i);   
+                        }
+                        else
+                        {
+                            // double tick
+                            SpawnTimer.Tick(Time.deltaTime*2);
                         }
                     }
                 }
@@ -207,6 +210,10 @@ public class Level : MonoBehaviour {
         {
             var child = this.Container.GetChild(i);
             GameObject.Destroy(child.gameObject);
+        }
+        for(int i=0; i<6; ++i)
+        {
+            controllers[i].Pawn = null;
         }
 
         // Step 2 create all things

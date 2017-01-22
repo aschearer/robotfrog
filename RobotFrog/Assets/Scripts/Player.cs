@@ -42,7 +42,7 @@ public class Player : MonoBehaviour {
     public int Row { get; internal set; }
 
     void Start () {
-        moveTimer.SetTime(1.0f);
+        moveTimer.SetTime(0.5f);
         moveTimer.IsLooping = false;
     }
     

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public enum HeightLevel
+public enum ShockPhase
 {
-    Peak,
-    Neutral,
-    Valley,
+    Peace,
+    Tremor,
+    Quake,
 }
 
 public enum UpDown
@@ -24,6 +24,9 @@ public class TileFloating : Tile {
 
     public TileState DefaultState;
     public TileState FlippedState;
+
+    [SerializeField]
+    private ShockPhase Phase;
     
     [SerializeField]
     private int Height;
@@ -32,21 +35,16 @@ public class TileFloating : Tile {
     [SerializeField]
     private ManualTimer Timer;
 
-    public int UpDownCount;
+    public int HalfPeriodCount;
 
     public int Steps = 5;
-
-    protected float Amplitude = 0.75f;
 
     void Start ()
     {
         State = DefaultState;
         Timer = new ManualTimer();
         Timer.SetTime(0.1f);
-        if(UpDownCount == -1)
-        {
-            UpDownState = UpDown.MovingUp;
-        }
+        Phase = ShockPhase.Peace;
     }
     
     void Update () 
@@ -63,16 +61,29 @@ public class TileFloating : Tile {
                 MoveDown();
             }
             HandleHeightChange();
-            if(Height == 0 && UpDownCount != -1)
+            if(Height == 0)
             {
-                UpDownCount--;
+                HalfPeriodCount--;
+                if(HalfPeriodCount == 0)
+                {
+                    Phase = ShockPhase.Peace;
+                }
+                else if(UpDownState == UpDown.MovingUp && Phase == ShockPhase.Quake)
+                {
+                    Phase = ShockPhase.Tremor;
+                }
             }
         }
     }
+
     bool IsMoving()
     {
-        // -1 is an always moving floating tile
-        return UpDownCount > 0 || UpDownCount == -1;
+        return Phase != ShockPhase.Peace;
+    }
+
+    float GetAmplitude()
+    {
+        return Phase == ShockPhase.Quake ? 0.8f : 0.3f;
     }
 
     void MoveUp()
@@ -94,7 +105,7 @@ public class TileFloating : Tile {
         if(Height <= -Steps)
         {
             UpDownState = UpDown.MovingUp;
-            if(DefaultState != FlippedState)
+            if(Phase == ShockPhase.Quake && DefaultState != FlippedState)
             {
                 IsFlipped = !IsFlipped;
                 State = IsFlipped ? FlippedState : DefaultState;
@@ -111,7 +122,8 @@ public class TileFloating : Tile {
             yield return new WaitForSeconds(delay);
         }
 
-        UpDownCount = 2;
+        Phase = ShockPhase.Quake;
+        HalfPeriodCount = 4;
         UpDownState = UpDown.MovingDown;
         yield return null;
     }
@@ -130,17 +142,19 @@ public class TileFloating : Tile {
     protected void HandleHeightChange()
     {
         Vector3 TilePosition = this.transform.position;
-        float VerticalOffset = (float)Height/Steps*Amplitude;
+        float VerticalOffset = (float)Height/Steps*GetAmplitude();
         TilePosition.y = VerticalOffset;
         this.transform.position = TilePosition;
+        bool bVeryHigh = Phase == ShockPhase.Quake && Height > 0;
+        bool bVeryLow = Phase == ShockPhase.Quake && Height > 0;
         switch(State)
         {
             case TileState.SinkingPad:
             case TileState.Spike:
-                Platform.SetActive(Height >= 0);
+                Platform.SetActive(!bVeryLow);
                 break;
             case TileState.Rock:
-                Platform.SetActive(Height <= 0);
+                Platform.SetActive(!bVeryHigh);
                 Platform.transform.localPosition = -Vector3.up*VerticalOffset;
                 break;
         }
@@ -149,7 +163,7 @@ public class TileFloating : Tile {
         {
             if (player)
             {
-                player.HandleSurfaceChange(Height < 0);
+                player.HandleSurfaceChange(!bVeryLow);
             }
         }
     }
