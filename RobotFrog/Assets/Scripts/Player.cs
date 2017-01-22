@@ -81,6 +81,8 @@ public class Player : MonoBehaviour {
     public int Column { get; internal set; }
     public int Row { get; internal set; }
 
+    public int Strength = 0;
+
     void Start () {
         canPound = false;
         canPoundTimeStamp = Time.time + 0.25f;
@@ -144,6 +146,8 @@ public class Player : MonoBehaviour {
 
         this.Column = (int)Mathf.Round(targetLocation.x);
         this.Row = (int)Mathf.Round(-targetLocation.z);
+
+        var nextTile = this.Level.GetTileAt(Column, Row);
         //Debug.Log(string.Format("C:{0},R:{1}", this.Column, this.Row));
 
         var thetaSpeed = Mathf.PI / this.movementTime;
@@ -155,6 +159,10 @@ public class Player : MonoBehaviour {
             var y = Mathf.Sin(t * thetaSpeed);
             var position = t * movementSpeed;
             position.y = y * arcHeight;
+            if(t > this.movementTime*0.5f)
+            {
+                position.y += nextTile.TotalOffset;
+            }
             this.transform.localPosition = basePosition + position;
             //Debug.Log(this.transform.localPosition + "in loop");
             yield return null;
@@ -162,7 +170,6 @@ public class Player : MonoBehaviour {
 
         this.transform.localPosition = targetLocation;
         isFlying = false;
-        var nextTile = this.Level.GetTileAt(Column, Row);
         nextTile.OnTouchEnter(this);
         yield return new WaitForSeconds(0.15f);
         canJump = true;
@@ -243,6 +250,7 @@ public class Player : MonoBehaviour {
             missileView.Owner = this;
             missileView.Level = this.Level;
             missileView.Target = new Vector3(targetColumn, 0, -targetRow);
+            missileView.BlastRadius = 1 + this.Strength;
             canShoot = false;
             canShootTimeStamp = Time.time + shotDelay;
             //Debug.Log("shot fired: " + Time.time + "can shoot next -> " + canShootTimeStamp);
@@ -374,7 +382,7 @@ public class Player : MonoBehaviour {
 
                 var tile = this.Level.GetTileAt(Column, Row);
                 int Magnitude = PoundFloatHeight > 0.3f ? 2 : 1;
-                this.Level.ExplodeAt(tile, 1, Magnitude, false);
+                this.Level.ExplodeAt(tile, 1+Strength, Magnitude, false);
                 canPound = false;
                 canPoundTimeStamp = Time.time + shotDelay;
                 this.Cursor.ShowLine(-1);

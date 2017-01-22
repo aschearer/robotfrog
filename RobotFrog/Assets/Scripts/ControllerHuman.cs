@@ -65,8 +65,8 @@ public class ControllerHuman : Controller {
             inputData.VerticalAxis = 0;
         }
 
-        inputData.PrimaryIsDown = Input.GetKey(GetPrimaryButton());
-        inputData.SecondaryIsDown = Input.GetKey(GetSecondaryButton());
+        inputData.PrimaryIsDown = Input.GetKey(GetPrimaryButton()) || Input.GetKey(GetAltPrimaryButton());
+        inputData.SecondaryIsDown = Input.GetKey(GetSecondaryButton()) || Input.GetKey(GetAltSecondaryButton());
         base.SendInput();
     }
 
@@ -95,6 +95,34 @@ public class ControllerHuman : Controller {
             case 3: return KeyCode.Joystick2Button1;
             case 4: return KeyCode.Joystick3Button1;
             case 5: return KeyCode.Joystick4Button1;
+        }
+    }
+
+    public KeyCode GetAltPrimaryButton()
+    {
+        switch(DeviceId)
+        {
+            default:
+            case 0: return KeyCode.LeftControl;
+            case 1: return KeyCode.Space;
+            case 2: return KeyCode.Joystick1Button2;
+            case 3: return KeyCode.Joystick2Button2;
+            case 4: return KeyCode.Joystick3Button2;
+            case 5: return KeyCode.Joystick4Button2;
+        }
+    }
+
+    public KeyCode GetAltSecondaryButton()
+    {
+        switch(DeviceId)
+        {
+            default:
+            case 0: return KeyCode.LeftShift;
+            case 1: return KeyCode.RightShift;
+            case 2: return KeyCode.Joystick1Button3;
+            case 3: return KeyCode.Joystick2Button3;
+            case 4: return KeyCode.Joystick3Button3;
+            case 5: return KeyCode.Joystick4Button3;
         }
     }
 }

@@ -33,6 +33,7 @@ public class Level : MonoBehaviour {
     public GameObject DecoTwoProto;
     public GameObject Player1SpotProto;
     public GameObject Player2SpotProto;
+    public GameObject HyperStoneProto;
     public Material CommonMain;
     public Material CommonAlt;
 
@@ -46,13 +47,18 @@ public class Level : MonoBehaviour {
     private List<Controller> controllers = new List<Controller>();
 
     private List<Player> players = new List<Player>();
+    private List<HyperStone> hyperstones = new List<HyperStone>();
+
+    private float nextHyperStoneTimeStamp = 0.0f;
     
     private ManualTimer SpawnTimer = new ManualTimer();
     private float targetCameraSize;
 
     public void Start()
     {
+        nextHyperStoneTimeStamp = Time.time + 5.0f;
         AudioManager.Instance.SetMusic(20);
+        
         SpawnTimer.SetTime(Globals.WarmupTime);
         for(int i=0; i<6; ++i)
         {
@@ -165,6 +171,12 @@ public class Level : MonoBehaviour {
                 {
                     levelState = LevelState.GameOver;
                     this.StartCoroutine(GameOverSequence());
+                }
+                if(hyperstones.Count < 3 && nextHyperStoneTimeStamp < Time.time )
+                {
+                    nextHyperStoneTimeStamp = Time.time + UnityEngine.Random.Range(5.0f,15.0f);
+
+                    SpawnHyperstone();
                 }
                 break;
         }
@@ -281,6 +293,38 @@ public class Level : MonoBehaviour {
         }
 
         return null;
+    }
+
+    public void SpawnHyperstone()
+    {
+        Tile goodTile = null;
+        int attempts = 0;
+        while(!goodTile && ++attempts < 20)
+        {
+            int randomTileInt = UnityEngine.Random.Range(0,this.tiles.Count);
+            Tile tile = this.tiles[randomTileInt];
+            if(tile.State != TileState.Water && tile.State != TileState.Barrier)
+            {
+                goodTile = tile;
+            }
+        }
+        if(!goodTile)
+        {
+            return;
+        }
+
+
+        int TileRadius = 1;
+        Vector3 Position = new Vector3(goodTile.Column*TileRadius, 0, -goodTile.Row*TileRadius);
+        Position.y += 4;
+        GameObject stoneGO = Instantiate(HyperStoneProto, Vector3.zero, Quaternion.identity, this.Container);
+        stoneGO.transform.localPosition = Position;
+        stoneGO.transform.localEulerAngles = Vector3.zero;
+        stoneGO.name = "HyperStone"+hyperstones.Count;
+        var hyperstone = stoneGO.GetComponent<HyperStone>();
+        hyperstone.OwnerTile = goodTile;
+        hyperstone.OwnerPlayer = null;
+        hyperstones.Add(hyperstone);
     }
 
     public void SpawnPlayer(int spawnSlot, int controller)
@@ -472,6 +516,7 @@ public class Level : MonoBehaviour {
     {
     	this.players.Clear();
         this.tiles.Clear();
+        this.hyperstones.Clear();
         
         this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
