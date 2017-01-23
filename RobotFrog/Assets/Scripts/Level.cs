@@ -43,6 +43,7 @@ public class Level : MonoBehaviour {
     public List<string> MapAbove;
 
     private int NumberOfColumns;
+    private int roundCount = 1;
 
     private List<Tile> tiles = new List<Tile>();
 
@@ -83,6 +84,9 @@ public class Level : MonoBehaviour {
                 break;
             case 3:
             case 4:
+                //four players will lock up
+                //in the gameover section i added a check for the round ending that only uses getplayertwo to switch the maps 
+                //no player number check is done
                 GetFourPlayer();
                 break;
         }
@@ -261,8 +265,21 @@ public class Level : MonoBehaviour {
             case LevelState.Playing:
                 if(CountPlayers() < 2)
                 {
+                    //what i did here was stupid
+                    //remove gettwoplayer as it will only cycle the twoplayer maps
                     levelState = LevelState.GameOver;
+                    
                     this.StartCoroutine(GameOverSequence());
+                    if(roundCount == 3)
+                    {
+                        GetTwoPlayer();
+                        roundCount = 0;
+                    }
+                    else
+                    {
+                        ++roundCount;
+                    }
+                        
                 }
                 if(hyperstones.Count < hyperStoneCount && nextHyperStoneTimeStamp < Time.time )
                 {
