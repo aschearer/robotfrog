@@ -9,6 +9,8 @@ public class ControllerHuman : Controller {
     private int DeviceId;
     private string horizontalAxisName;
     private string verticalAxisName;
+    private string aAxisName;
+    private string bAxisName;
     private bool horizontalIsDown;
     private bool verticalIsDown;
 
@@ -17,6 +19,8 @@ public class ControllerHuman : Controller {
         this.DeviceId = id;
         this.horizontalAxisName = "Horizontal-" + this.DeviceId;
         this.verticalAxisName = "Vertical-" + this.DeviceId;
+        this.aAxisName = "joytriggerA-" + this.DeviceId;
+        this.bAxisName = "joytriggerB-" + this.DeviceId;
     }
 
     protected override void SendInput()
@@ -67,6 +71,16 @@ public class ControllerHuman : Controller {
 
         inputData.PrimaryIsDown = Input.GetKey(GetPrimaryButton()) || Input.GetKey(GetAltPrimaryButton());
         inputData.SecondaryIsDown = Input.GetKey(GetSecondaryButton()) || Input.GetKey(GetAltSecondaryButton());
+        if(DeviceId==2 || DeviceId==3 || DeviceId==4 || DeviceId==5)
+        {
+            var axisA = Input.GetAxis(aAxisName);
+
+            inputData.PrimaryIsDown |= axisA > 0.1f;
+
+            var axisB = Input.GetAxis(bAxisName);
+
+            inputData.SecondaryIsDown |= axisB > 0.1f;
+        }
         base.SendInput();
     }
 
