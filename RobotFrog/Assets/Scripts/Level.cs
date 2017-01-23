@@ -56,11 +56,12 @@ public class Level : MonoBehaviour {
     private ManualTimer SpawnTimer = new ManualTimer();
     private float targetCameraSize;
     private Vector3 targetCameraPosition;
+    private bool hasStarted;
 
     public void Start()
     {
         nextHyperStoneTimeStamp = Time.time + 15.0f;
-        AudioManager.Instance.SetMusic(20);
+        this.StartCoroutine(this.PlayMusic());
         
         SpawnTimer.SetTime(Globals.WarmupTime);
         for(int i=0; i<6; ++i)
@@ -89,6 +90,18 @@ public class Level : MonoBehaviour {
         Camera.main.orthographicSize = this.targetCameraSize * 2;
         this.targetCameraPosition = Camera.main.transform.localPosition;
         Camera.main.transform.localPosition += new Vector3(0, 4);
+
+        this.hasStarted = true;
+    }
+
+    private IEnumerator PlayMusic()
+    {
+        while (AudioManager.Instance == null)
+        {
+            yield return null;
+        }
+
+        AudioManager.Instance.SetMusic(20);
     }
 
     void GetTwoPlayer()
@@ -187,6 +200,11 @@ public class Level : MonoBehaviour {
     }
     public void Update()
     {
+        if (!this.hasStarted)
+        {
+            return;
+        }
+
         if (Level.levelState == LevelState.WaitingToSpawn && this.players.Count == 0)
         {
             var angles = this.transform.localEulerAngles;
