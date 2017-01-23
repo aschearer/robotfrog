@@ -7,6 +7,6 @@ You've just completed an epic journey returning to the pool from which you hatch
 <img src="https://raw.githubusercontent.com/aschearer/robotfrog/master/marketing/screenshots/gameplay1.png" alt="Splashy Frogs gameplay" /><br />
 
 ### Team
-Alex Schearer
-Sheridan Thirsk
-Brendon Telliard
+ * Alex Schearer
+ * Sheridan Thirsk
+ * Brendon Telliard
