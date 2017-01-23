@@ -219,7 +219,7 @@ public class Player : MonoBehaviour {
         if (isFiring)
         {
             this.fireTimer += Time.deltaTime * 2;
-            this.fireRange = 1 + Strength + ((int)this.fireTimer % 4);
+            this.fireRange = 2 + ((int)this.fireTimer % 3);
             this.Cursor.ShowLine(fireRange);
             if(!aimSoundPlaying)
             {

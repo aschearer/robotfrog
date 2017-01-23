@@ -72,11 +72,12 @@ public class Missile : MonoBehaviour
         //Debug.Log(string.Format("T:{0}, A:{1}", this.Target, this.transform.localPosition));
 
         var position = this.transform.localPosition;
-        while (position.y > -0.5f)
+        while (position.y > 0f)
         {
 
             SetPhase(2);
             position.y -= 2f * Time.deltaTime;
+            this.transform.localScale = Vector3.one * (1.0f+Mathf.Clamp(1.0f-position.y,0.0f,1.0f));
             this.transform.localPosition = position;
             yield return null;
         }

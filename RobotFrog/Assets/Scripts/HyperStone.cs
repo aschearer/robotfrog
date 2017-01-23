@@ -27,7 +27,12 @@ public class HyperStone : MonoBehaviour
         Vector3 GoalPosition = this.transform.localPosition + RandomOffset;
         if(OwnerTile)
         {
-            GoalPosition = OwnerTile.transform.localPosition + Vector3.up*(OwnerTile.TotalOffset + 0.3f); 
+            float upAmount = 0.5f;
+            if(OwnerTile.State == TileState.FloatingBox)
+            {
+                upAmount += 0.4f;
+            }
+            GoalPosition = OwnerTile.transform.localPosition + Vector3.up*upAmount; 
         }
         else if(OwnerPlayer)
         {

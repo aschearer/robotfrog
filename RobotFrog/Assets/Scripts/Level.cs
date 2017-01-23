@@ -52,6 +52,8 @@ public class Level : MonoBehaviour {
     private List<HyperStone> hyperstones = new List<HyperStone>();
 
     private float nextHyperStoneTimeStamp = 0.0f;
+    public float hyperStoneFirstDelay = 8.0f;
+    public int hyperStoneCount = 4;
     
     private ManualTimer SpawnTimer = new ManualTimer();
     private float targetCameraSize;
@@ -60,7 +62,6 @@ public class Level : MonoBehaviour {
 
     public void Start()
     {
-        nextHyperStoneTimeStamp = Time.time + 15.0f;
         this.StartCoroutine(this.PlayMusic());
         
         SpawnTimer.SetTime(Globals.WarmupTime);
@@ -224,6 +225,7 @@ public class Level : MonoBehaviour {
         {
             case LevelState.None:
                 MakeLevel(Map);
+                nextHyperStoneTimeStamp = Time.time + hyperStoneFirstDelay;
                 levelState = LevelState.WaitingToSpawn;
                 break;
             case LevelState.WaitingToSpawn:
@@ -262,7 +264,7 @@ public class Level : MonoBehaviour {
                     levelState = LevelState.GameOver;
                     this.StartCoroutine(GameOverSequence());
                 }
-                if(hyperstones.Count < 3 && nextHyperStoneTimeStamp < Time.time )
+                if(hyperstones.Count < hyperStoneCount && nextHyperStoneTimeStamp < Time.time )
                 {
                     nextHyperStoneTimeStamp = Time.time + UnityEngine.Random.Range(5.0f,15.0f);
 
@@ -358,7 +360,9 @@ public class Level : MonoBehaviour {
         twirl.angle = 0;
         twirl.enabled = false;
 
+        nextHyperStoneTimeStamp = Time.time + hyperStoneFirstDelay;
         levelState = LevelState.WaitingToSpawn;
+
     }
 
     public void ExplodeAt(Tile origin, int radius, int magnitude = 2, bool includeSelf = true)
@@ -374,10 +378,45 @@ public class Level : MonoBehaviour {
                 continue;
             }
 
-            var distance = Mathf.Abs(origin.Column - neighbor.Column) + Mathf.Abs(origin.Row - neighbor.Row);
+            int distance = 1000;
+            int distanceColumn = Mathf.Abs(origin.Column - neighbor.Column);
+            int distanceRow = Mathf.Abs(origin.Row - neighbor.Row);
+            if(distanceColumn==0 && distanceRow==0)
+            {
+                distance = 0;
+            }
+            else if(distanceColumn==1 && distanceRow==0 || distanceColumn==0 && distanceRow==1)
+            {
+                distance = 1;
+            }
+            else if(distanceColumn==1 && distanceRow==1)
+            {
+                distance = 2;
+            }
+            else if(distanceColumn==2 && distanceRow==0 || distanceColumn==0 && distanceRow==2)
+            {
+                distance = 3;
+            }
+            else if(distanceColumn==2 && distanceRow==1 || distanceColumn==1 && distanceRow==2)
+            {
+                distance = 4;
+            }
+            else if(distanceColumn==2 && distanceRow==2)
+            {
+                distance = 5;
+            }
+            else if(distanceColumn<=3 && distanceRow<=3)
+            {
+                distance = 6;
+            }
+            else if(distanceColumn<=4 && distanceRow<=4)
+            {
+                distance = 9;
+            }
+
+
             if (distance <= radius)
             {
-
                 this.StartCoroutine(neighbor.HandleExplode(magnitude, distance * 0.4f));
             }
         }
@@ -400,13 +439,19 @@ public class Level : MonoBehaviour {
     {
         Tile goodTile = null;
         int attempts = 0;
-        int minColumn = (NumberOfColumns/2) -1;
-        int maxColumn = minColumn + 2;
+        float mid = (float)(NumberOfColumns-1)/2.0f;
+        int minColumn = (int)Mathf.Floor(mid);
+        int maxColumn = (int)Mathf.Ceil(mid);
+        if(minColumn == maxColumn)
+        {
+            minColumn--;
+            maxColumn++;
+        }
         while(!goodTile && ++attempts < 20)
         {
             int randomTileInt = UnityEngine.Random.Range(0,this.tiles.Count);
             Tile tile = this.tiles[randomTileInt];
-            if(tile.Column > minColumn && tile.Column < maxColumn)
+            if(tile.Column >= minColumn && tile.Column <= maxColumn)
             {
                 if(tile.State != TileState.Water && tile.State != TileState.Barrier)
                 {
