@@ -42,6 +42,8 @@ public class Level : MonoBehaviour {
     public List<string> Map;
     public List<string> MapAbove;
 
+    private int NumberOfColumns;
+
     private List<Tile> tiles = new List<Tile>();
 
     private List<Controller> controllers = new List<Controller>();
@@ -75,38 +77,12 @@ public class Level : MonoBehaviour {
             case 0:
             case 1:
             case 2:
-            // 8x5 with columns
-            Map.Add("_R____W_");
-            Map.Add("_R_BWB__");
-            Map.Add("________");
-            Map.Add("__BWB_R_");
-            Map.Add("_W____R_");
-            MapAbove.Add("________");
-            MapAbove.Add("_1____3_");
-            MapAbove.Add("________");
-            MapAbove.Add("_4____2_");
-            MapAbove.Add("________");
-            break;
+                GetTwoPlayer();
+                break;
             case 3:
             case 4:
-            // 10x8 with columns
-            Map.Add("_______W");
-            Map.Add("_WR____W");
-            Map.Add("_R_____W");
-            Map.Add("____WBB_");
-            Map.Add("_BBW____");
-            Map.Add("W_____R_");
-            Map.Add("W____RW_");
-            Map.Add("W_______");
-            MapAbove.Add("_1______");
-            MapAbove.Add("______3_");
-            MapAbove.Add("________");
-            MapAbove.Add("________");
-            MapAbove.Add("________");
-            MapAbove.Add("________");
-            MapAbove.Add("_4______");
-            MapAbove.Add("______2_");
-            break;
+                GetFourPlayer();
+                break;
         }
 
         this.targetCameraSize = Camera.main.orthographicSize;
@@ -115,6 +91,48 @@ public class Level : MonoBehaviour {
         Camera.main.transform.localPosition += new Vector3(0, 3);
     }
 
+    void GetTwoPlayer()
+    {
+        Map.Clear();
+        MapAbove.Clear();
+
+        // 8x5 with columns
+        Map.Add("_R____W_");
+        Map.Add("_R_BWB__");
+        Map.Add("________");
+        Map.Add("__BWB_R_");
+        Map.Add("_W____R_");
+        MapAbove.Add("________");
+        MapAbove.Add("_1____3_");
+        MapAbove.Add("________");
+        MapAbove.Add("_4____2_");
+        MapAbove.Add("________");
+    }
+
+    void GetFourPlayer()
+    {
+
+        Map.Clear();
+        MapAbove.Clear();
+        
+        // 10x8 with columns
+        Map.Add("_______W");
+        Map.Add("_WR____W");
+        Map.Add("_R_____W");
+        Map.Add("____WBB_");
+        Map.Add("_BBW____");
+        Map.Add("W_____R_");
+        Map.Add("W____RW_");
+        Map.Add("W_______");
+        MapAbove.Add("_1______");
+        MapAbove.Add("______3_");
+        MapAbove.Add("________");
+        MapAbove.Add("________");
+        MapAbove.Add("________");
+        MapAbove.Add("________");
+        MapAbove.Add("_4______");
+        MapAbove.Add("______2_");
+    }
     public void Update()
     {
         if (Level.levelState == LevelState.WaitingToSpawn && this.players.Count == 0)
@@ -312,13 +330,18 @@ public class Level : MonoBehaviour {
     {
         Tile goodTile = null;
         int attempts = 0;
+        int minColumn = (NumberOfColumns/2) -1;
+        int maxColumn = minColumn + 2;
         while(!goodTile && ++attempts < 20)
         {
             int randomTileInt = UnityEngine.Random.Range(0,this.tiles.Count);
             Tile tile = this.tiles[randomTileInt];
-            if(tile.State != TileState.Water && tile.State != TileState.Barrier)
+            if(tile.Column > minColumn && tile.Column < maxColumn)
             {
-                goodTile = tile;
+                if(tile.State != TileState.Water && tile.State != TileState.Barrier)
+                {
+                    goodTile = tile;
+                }
             }
         }
         if(!goodTile)
@@ -541,12 +564,12 @@ public class Level : MonoBehaviour {
         
         this.Container.transform.localPosition = Vector3.zero;
         int TileRadius = 1;
-        int numberOfColumns = 0;
+        NumberOfColumns = 0;
         for(int row=0; row<Map.Count; ++row)
         {
             string tiles = Map[row];
             string aboveTiles = MapAbove[row];
-            numberOfColumns = tiles.Length;
+            NumberOfColumns = tiles.Length;
             for(int column=0; column<tiles.Length; ++column)
             {
                 Vector3 Position = this.transform.localPosition + new Vector3(column*TileRadius, 0, -row*TileRadius);
@@ -601,13 +624,13 @@ public class Level : MonoBehaviour {
 
         for(int row=-1; row<=Map.Count; ++row)
         {
-            for(int column=-1; column<=numberOfColumns; ++column)
+            for(int column=-1; column<=NumberOfColumns; ++column)
             {
                 Vector3 Position = this.Container.localPosition + new Vector3(0.25f + column*TileRadius, 0.5f, -row*TileRadius);
                 Quaternion Rotation = Quaternion.identity;
                 Position.x -= 2;
                 if(row == -1 || row == Map.Count ||
-                    column == -1 || column == numberOfColumns)
+                    column == -1 || column == NumberOfColumns)
                 {
                     Position.y += 0.25f;
                     GameObject DecoWall = Instantiate(DecoWallProto, Position, Rotation, this.Container);
@@ -626,10 +649,10 @@ public class Level : MonoBehaviour {
             }
         }
 
-        if (numberOfColumns > 0)
+        if (NumberOfColumns > 0)
         {
             var containerPosition = Vector3.zero;
-            containerPosition.x = -((numberOfColumns - 1) / 2f);
+            containerPosition.x = -((NumberOfColumns - 1) / 2f);
             containerPosition.z = (Map.Count -1) / 2f;
             this.Container.transform.localPosition = containerPosition;
         }
