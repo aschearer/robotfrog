@@ -88,25 +88,77 @@ public class Level : MonoBehaviour {
         this.targetCameraSize = Camera.main.orthographicSize;
         Camera.main.orthographicSize = this.targetCameraSize * 2;
         this.targetCameraPosition = Camera.main.transform.localPosition;
-        Camera.main.transform.localPosition += new Vector3(0, 3);
+        Camera.main.transform.localPosition += new Vector3(0, 4);
     }
 
     void GetTwoPlayer()
     {
         Map.Clear();
         MapAbove.Clear();
+        System.Random r = new System.Random();
+        int rInt = r.Next(0, 4);
+        Debug.Log(rInt);
+        switch (rInt)
+        {
+            case 0:
+                // 8x5 with columns
+                Map.Add("_R____W_");
+                Map.Add("_R_BWB__");
+                Map.Add("________");
+                Map.Add("__BWB_R_");
+                Map.Add("_W____R_");
+                MapAbove.Add("________");
+                MapAbove.Add("_1____3_");
+                MapAbove.Add("________");
+                MapAbove.Add("_4____2_");
+                MapAbove.Add("________");
+                break;
+            case 1:
+                //8x6 
+                Map.Add("W_R_____");
+                Map.Add("___WW___");
+                Map.Add("_R_BB___");
+                Map.Add("___BB_R_");
+                Map.Add("___WW___");
+                Map.Add("_____R_W");
+                MapAbove.Add("________");
+                MapAbove.Add("________");
+                MapAbove.Add("_1____3_");
+                MapAbove.Add("_4____2_");
+                MapAbove.Add("________");
+                MapAbove.Add("________");
+                break;
+            case 2:
+                // 8x5 with columns
+                Map.Add("_B_____R");
+                Map.Add("W_BBB__W");
+                Map.Add("W__B___W");
+                Map.Add("W_BBB__W");
+                Map.Add("R_____B_");
 
-        // 8x5 with columns
-        Map.Add("_R____W_");
-        Map.Add("_R_BWB__");
-        Map.Add("________");
-        Map.Add("__BWB_R_");
-        Map.Add("_W____R_");
-        MapAbove.Add("________");
-        MapAbove.Add("_1____3_");
-        MapAbove.Add("________");
-        MapAbove.Add("_4____2_");
-        MapAbove.Add("________");
+                MapAbove.Add("________");
+                MapAbove.Add("_1____3_");
+                MapAbove.Add("________");
+                MapAbove.Add("_4____2_");
+                MapAbove.Add("________");
+                break;
+            case 3:
+                // 8x5 with columns
+                Map.Add("_B_B_B_B");
+                Map.Add("B_BWB_BW");
+                Map.Add("___RR___");
+                Map.Add("WB_BWB_B");
+                Map.Add("B_B_B_B_");
+
+                MapAbove.Add("1______3");
+                MapAbove.Add("________");
+                MapAbove.Add("________");
+                MapAbove.Add("________");
+                MapAbove.Add("4______2");
+                break;
+
+        }
+
     }
 
     void GetFourPlayer()
