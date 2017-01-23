@@ -37,6 +37,7 @@ public class Tile : MonoBehaviour {
             OtherStone.OwnerTile = null;
             OtherStone.OwnerPlayer = TouchingPlayers[0];
             TouchingPlayers[0].Strength++;
+            AudioManager.Instance.PlaySound(24);
         }
         else if(!TouchingHyperstones.Contains(OtherStone))
         {
@@ -53,6 +54,7 @@ public class Tile : MonoBehaviour {
                 stone.OwnerTile = null;
                 stone.OwnerPlayer = OtherPlayer;
                 OtherPlayer.Strength++;
+                AudioManager.Instance.PlaySound(24);
             }
             TouchingHyperstones.Clear();
             TouchingPlayers.Add(OtherPlayer);
