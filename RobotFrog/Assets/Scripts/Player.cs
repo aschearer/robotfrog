@@ -133,7 +133,6 @@ public class Player : MonoBehaviour {
 
     IEnumerator jumpAnimation(Vector3 targetLocation)
     {
-        //Debug.Log("moving to " + targetLocation);
 
         isFlying = true;
         canJump = false;
@@ -148,7 +147,6 @@ public class Player : MonoBehaviour {
         this.Row = (int)Mathf.Round(-targetLocation.z);
 
         var nextTile = this.Level.GetTileAt(Column, Row);
-        //Debug.Log(string.Format("C:{0},R:{1}", this.Column, this.Row));
 
         var thetaSpeed = Mathf.PI / this.movementTime;
         var distanceToTravel = (targetLocation - this.transform.localPosition);
@@ -164,7 +162,6 @@ public class Player : MonoBehaviour {
                 position.y += nextTile.TotalOffset;
             }
             this.transform.localPosition = basePosition + position;
-            //Debug.Log(this.transform.localPosition + "in loop");
             yield return null;
         }
 
@@ -253,7 +250,7 @@ public class Player : MonoBehaviour {
             missileView.BlastRadius = 1 + this.Strength;
             canShoot = false;
             canShootTimeStamp = Time.time + shotDelay;
-            //Debug.Log("shot fired: " + Time.time + "can shoot next -> " + canShootTimeStamp);
+
             this.fireTimer = 0;
         }
     }
@@ -331,14 +328,12 @@ public class Player : MonoBehaviour {
     {
         int column = (int)Mathf.Round(nextPosition.x);
         int row = (int)Mathf.Round(-nextPosition.z);
-        //Debug.Log(string.Format("Looked at: {0},{1}", column, row));
+
         var tile = Level.GetTileAt(column, row);
         if (tile == null)
         {
             return false;
         }
-
-        //Debug.Log(string.Format("Investigating tile at: {0},{1} type: {2}", tile.Column, tile.Row, tile.State));
 
         bool isValidMove = false;
         TileState state = tile.State;

@@ -120,7 +120,6 @@ public class Level : MonoBehaviour {
         MapAbove.Clear();
         System.Random r = new System.Random();
         int rInt = r.Next(0, 4);
-        Debug.Log(rInt);
         switch (rInt)
         {
             case 0:
@@ -257,7 +256,6 @@ public class Level : MonoBehaviour {
                     {
                         SpawnPlayer(i, i);
                     }
-                    //Debug.Log("audio start");
                     AudioManager.Instance.SetMusic(21);
                     levelState = LevelState.Playing;
                 }
@@ -315,7 +313,6 @@ public class Level : MonoBehaviour {
         AudioManager.Instance.PlaySound(18);
         if(CountPlayers() >= PlayerCount)
         {
-            //Debug.Log("audio start");
             AudioManager.Instance.SetMusic(21);
             levelState = LevelState.Playing;
         }
