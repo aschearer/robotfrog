@@ -1,0 +1,57 @@
+---
+layout: default
+title: Splashy Frogs
+---
+
+<p>
+  You've just completed an epic journey returning to the pool from which you hatched. Just as you wade in you feel a spark run through your spine. Stepping through the mist is your arch enemy, Blue Frog! Not satisfied with ruining your career and stealing your girlfriend, he's appeared to spoil your romp through memory lane. 
+</p>
+
+<p>
+  Hurl explosive coconuts to knock your opponent off his lily pad and into the water. 
+</p>
+
+<div class="template-wrap clear">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="500px" width="800px"></canvas>
+      <br>
+      <div class="logo"></div>
+      <div class="fullscreen"><img src="game/TemplateData/fullscreen.png" width="38" height="38" alt="Fullscreen" title="Fullscreen" onclick="SetFullscreen(1);" /></div>
+    </div>
+    <script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 268435456,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    backgroundColor: "#222C36",
+    splashStyle: "Light",
+    dataUrl: "game/Release/SplashyFrogs.data",
+    codeUrl: "game/Release/SplashyFrogs.js",
+    asmUrl: "game/Release/SplashyFrogs.asm.js",
+    memUrl: "game/Release/SplashyFrogs.mem",
+  };
+</script>
+<script src="game/Release/UnityLoader.js"></script>
+
+<h3>Controls</h3>
+<table>
+  <tr>
+    <th>Input</th> <th>Movement</th> <th>Fire</th> <th>Stomp</th>
+  </tr>
+  <tr>
+    <td>Keyboard 1</td> <td>AWSD</td> <td>Left CTRL</td> <td>Left Shift</td>
+  </tr>
+  <tr>
+    <td>Keyboard 2</td> <td>Arrow Keys</td> <td>Spacebar</td> <td>Right Shift</td>
+  </tr>
+  <tr>
+    <td>Gamepad</td> <td>Joystick</td> <td>A Button</td> <td>B Button</td>
+  </tr>
+</table>
+
+<h3>How to Play</h3>
+<p>
+  In Splashy Frogs you must avoid touching water. Whenever a coconut expldoes it will cause a big splash. If you're not careful you'll get wet and die! Walk on lily pads, stones, or boxes to avoid getting wet. If a lily pad is blocked by spikes try stomping or throwing a coconut on it to flip it over.
+</p>
+<p>
+  There are four unique levels which rotate after three wins. Players can collect yellow tennis balls to power-up their coconuts for greater destructive power.
+</p>
