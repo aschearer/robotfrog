@@ -89,7 +89,7 @@ public class ControllerHuman : Controller {
         switch(DeviceId)
         {
             default:
-            case 0: return KeyCode.LeftControl;
+            case 0: return KeyCode.Tab;
             case 1: return KeyCode.Space;
             case 2: return KeyCode.Joystick1Button0;
             case 3: return KeyCode.Joystick2Button0;

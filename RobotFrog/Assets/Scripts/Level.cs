@@ -117,8 +117,7 @@ public class Level : MonoBehaviour {
     {
         Map.Clear();
         MapAbove.Clear();
-        System.Random r = new System.Random();
-        int rInt = r.Next(0, 4);
+        int rInt = UnityEngine.Random.Range(0, 4);
         switch (rInt)
         {
             case 0:
@@ -375,6 +374,7 @@ public class Level : MonoBehaviour {
         }
 
         // Step 2 create all things
+        GetTwoPlayer();
         this.MakeLevel(this.Map);
 
         for (float t = 0; t < 1; t += Time.deltaTime)
