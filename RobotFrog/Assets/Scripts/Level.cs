@@ -212,7 +212,7 @@ public class Level : MonoBehaviour {
         {
             return;
         }
-        if(SplashTimeRemaining > 0.01f)
+        if(SplashTimeRemaining > 0)
         {
             SplashTimeRemaining -= Time.deltaTime;
             if(SplashTimeRemaining <= 0)
