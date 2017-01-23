@@ -18,6 +18,11 @@ public class Level : MonoBehaviour {
     public static LevelState levelState = LevelState.None;
     public int PlayerCount = 2;
 
+    public GameObject SplashScreenOne;
+    public GameObject SplashScreenTwo;
+    private float SplashTime = 10.0f;
+    private float SplashTimeRemaining;
+
     public GameObject TileBarrier;
     public GameObject TileFloating;
     public GameObject TileWater;
@@ -64,7 +69,7 @@ public class Level : MonoBehaviour {
     public void Start()
     {
         this.StartCoroutine(this.PlayMusic());
-        
+        SplashTimeRemaining = SplashTime;
         SpawnTimer.SetTime(Globals.WarmupTime);
         for(int i=0; i<6; ++i)
         {
@@ -208,6 +213,18 @@ public class Level : MonoBehaviour {
         if (!this.hasStarted)
         {
             return;
+        }
+        if(SplashTimeRemaining > 0.01f)
+        {
+            SplashTimeRemaining -= Time.deltaTime;
+            if(SplashTimeRemaining < SplashTime*0.5f)
+            {
+                SplashScreenOne.SetActive(false);
+            }
+            if(SplashTimeRemaining < 0)
+            {
+                SplashScreenTwo.SetActive(false);
+            }
         }
 
         if (Level.levelState == LevelState.WaitingToSpawn && this.players.Count == 0)
@@ -574,6 +591,7 @@ public class Level : MonoBehaviour {
             playerView.Level = this;
             playerView.Tint = Tint;
             playerView.JumpSound = JumpSound;
+            playerView.Strength = 0;
             playerView.Column = (int)Mathf.Round(Position.x);
             playerView.Row = (int)Mathf.Round(-Position.z);
             bool bUseAltMat = spawnSlot >= 2;
