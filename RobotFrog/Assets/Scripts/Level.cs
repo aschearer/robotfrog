@@ -144,17 +144,17 @@ public class Level : MonoBehaviour {
                 break;
             case 2:
                 // 8x5 with columns
-                Map.Add("_B_____R");
-                Map.Add("W_BBB__W");
-                Map.Add("W__B___W");
-                Map.Add("W_BBB__W");
-                Map.Add("R_____B_");
+                Map.Add("_B______R");
+                Map.Add("W__BBB__W");
+                Map.Add("W___B___W");
+                Map.Add("W__BBB__W");
+                Map.Add("R______B_");
 
-                MapAbove.Add("________");
-                MapAbove.Add("_1____3_");
-                MapAbove.Add("________");
-                MapAbove.Add("_4____2_");
-                MapAbove.Add("________");
+                MapAbove.Add("_________");
+                MapAbove.Add("_1_____3_");
+                MapAbove.Add("_________");
+                MapAbove.Add("_4_____2_");
+                MapAbove.Add("_________");
                 break;
             case 3:
                 // 8x5 with columns
