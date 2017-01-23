@@ -81,6 +81,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCount: 2
+  SplashScreenOne: {fileID: 0}
+  SplashScreenTwo: {fileID: 0}
   TileBarrier: {fileID: 1555264021768636, guid: d2d72c48788e574489f90564ede5ad40,
     type: 2}
   TileFloating: {fileID: 1065305165739622, guid: 7f8655786b11e654fbf4b0ab10b6cc92,
@@ -115,3 +117,5 @@ MonoBehaviour:
   Container: {fileID: 4791867351989844}
   Map: []
   MapAbove: []
+  hyperStoneFirstDelay: 8
+  hyperStoneCount: 4

@@ -19,8 +19,7 @@ public class Level : MonoBehaviour {
     public int PlayerCount = 2;
 
     public GameObject SplashScreenOne;
-    public GameObject SplashScreenTwo;
-    private float SplashTime = 10.0f;
+    private float SplashTime = 3.0f;
     private float SplashTimeRemaining;
 
     public GameObject TileBarrier;
@@ -216,13 +215,9 @@ public class Level : MonoBehaviour {
         if(SplashTimeRemaining > 0.01f)
         {
             SplashTimeRemaining -= Time.deltaTime;
-            if(SplashTimeRemaining < SplashTime*0.5f)
+            if(SplashTimeRemaining <= 0)
             {
                 SplashScreenOne.SetActive(false);
-            }
-            if(SplashTimeRemaining < 0)
-            {
-                SplashScreenTwo.SetActive(false);
             }
         }
 
